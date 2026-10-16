@@ -47,7 +47,7 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 - [x] Create `ml/configs/coffee.yaml` defining class taxonomy mapping (`healthy`, `leaf_rust` + severity, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), image size (`224x224`), and split parameters.
 - [x] Implement `ml/scripts/prepare_coffee.py` (with unit-tested core logic in `ml/src/`) to fix EXIF orientation, drop corrupt images, convert to RGB, filter BRACOL to whole-leaf images, deduplicate across sources via perceptual hash (`imagehash`), and generate a leakage-free `70/15/15` split grouped by `group_id` (plant) and stratified by label (`seed=42`).
 - [x] Evaluate any coffee class with `< 50` training images for merging and document the decision; generate `docs/data_reports/coffee.md` (split counts, sample grids, duplicates removed).
-- [ ] Implement baseline training script (`ml/src/train.py` + Colab notebook) using `MobileNetV3-Large` (`ImageNet` weights, frozen backbone only, class weights, standard augmentations) and log test metrics + confusion matrix in `docs/EXPERIMENTS.md`.
+- [x] Implement baseline training script (`ml/src/train.py` + Colab notebook) using `MobileNetV3-Large` (`ImageNet` weights, frozen backbone only, class weights, standard augmentations) and log test metrics + confusion matrix in `docs/EXPERIMENTS.md`.
 
 ### Done when
 - `download_rocole.py`, `download_bracol.py`, and `prepare_coffee.py` run reproducibly with unit tests covering deduplication and grouped stratified splitting (`seed=42`, zero `group_id` overlap across splits).

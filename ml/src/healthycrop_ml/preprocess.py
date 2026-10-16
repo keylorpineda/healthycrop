@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageOps, UnidentifiedImageError
 
 
@@ -37,3 +38,15 @@ def load_clean_rgb_image(path: Path, image_size: int = 224) -> Image.Image | Non
             return rgb
     except (UnidentifiedImageError, OSError, ValueError, SyntaxError):
         return None
+
+
+def image_to_normalized_tensor(
+    image: Image.Image,
+    mean: tuple[float, float, float] = (127.5, 127.5, 127.5),
+    std: tuple[float, float, float] = (127.5, 127.5, 127.5),
+) -> np.ndarray:
+    """Convert an RGB PIL Image to a float32 `(H, W, 3)` tensor: `(rgb - mean) / std`."""
+    arr = np.asarray(image.convert("RGB"), dtype=np.float32)
+    mean_arr = np.asarray(mean, dtype=np.float32).reshape((1, 1, 3))
+    std_arr = np.asarray(std, dtype=np.float32).reshape((1, 1, 3))
+    return (arr - mean_arr) / std_arr

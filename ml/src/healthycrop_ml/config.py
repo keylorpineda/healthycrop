@@ -36,6 +36,8 @@ class CropConfig:
     split: SplitRatios
     classes: tuple[str, ...]
     sources: dict[str, dict[str, Any]]
+    mean: tuple[float, float, float] = (127.5, 127.5, 127.5)
+    std: tuple[float, float, float] = (127.5, 127.5, 127.5)
 
 
 def load_crop_config(config_path: Path) -> CropConfig:
@@ -51,6 +53,12 @@ def load_crop_config(config_path: Path) -> CropConfig:
     if not classes:
         raise ValueError(f"No classes defined in {config_path}")
 
+    norm_raw = raw.get("normalization") or {}
+    mean_list = norm_raw.get("mean", [127.5, 127.5, 127.5])
+    std_list = norm_raw.get("std", [127.5, 127.5, 127.5])
+    mean_tuple = (float(mean_list[0]), float(mean_list[1]), float(mean_list[2]))
+    std_tuple = (float(std_list[0]), float(std_list[1]), float(std_list[2]))
+
     return CropConfig(
         crop=str(raw["crop"]),
         image_size=int(raw.get("image_size", 224)),
@@ -61,4 +69,6 @@ def load_crop_config(config_path: Path) -> CropConfig:
         split=split,
         classes=classes,
         sources=dict(raw.get("sources") or {}),
+        mean=mean_tuple,
+        std=std_tuple,
     )
