@@ -141,6 +141,17 @@ This log documents what was built, key architectural decisions, and technical pr
   - Built `ResultScreen` (`app/src/screens/ResultScreen.tsx`) displaying the hero photo, severity-colored `ProgressMeter`, pop-in diagnosis status badge (`healthy`, `watch`, `actNow`), tactile haptic feedback (Success/Warning/Error), low-confidence retake guidance (`"Confianza baja — repita la captura"`), probability breakdown by class, recommended next steps, and non-replacement agronomic disclaimer.
   - Implemented `/scan` route (`app/src/app/scan.tsx`) integrating Camera -> Analyzing -> Result pipeline with fallback error handling, connected to `HomeScreen`'s primary Scan CTA.
   - Authored comprehensive Jest + RNTL unit and integration test suite (`app/src/screens/__tests__/camera_result.test.tsx`), verifying all user interactions and Spanish/English copy parity.
+- **`expo-sqlite` Persistence, History Screen, Scan Detail & Farms/Plots CRUD (`#26`)**:
+  - Installed and pinned `expo-sqlite@~15.1.2` and `expo-crypto@~14.0.2`, updating `docs/ARCHITECTURE.md` §6.
+  - Implemented offline-first relational database architecture in `app/src/db/`:
+    - DDL schema (`schema.ts`) with WAL mode (`journal_mode = WAL`), foreign keys enabled, tables for `farms`, `plots`, `scans`, and sync queue indices (`farm_id`, `plot_id`, `crop`, `severity`, `scanned_at`, `deleted_at`, `sync_status`).
+    - Standard repositories (`farmsRepository`, `plotsRepository`, `scansRepository`) supporting client-generated UUIDs (RFC 4122 v4 via `expo-crypto`), soft-deletes (`deleted_at`), query filters, and swipe-to-delete undo restoration.
+    - Added unit test suite in `app/src/db/__tests__/repositories.test.ts`.
+  - Built `HistoryScreen` (`app/src/screens/HistoryScreen.tsx`) with crop filter chips (`all`, `coffee`, `cacao`, `banana`), severity filter (`all`, `healthy`, `watch`, `actNow`), farm filter, card list, swipe/tap to delete with undo `Toast`, and pull-to-refresh.
+  - Built `ScanDetailScreen` (`app/src/screens/ScanDetailScreen.tsx`) with full diagnosis breakdown, confidence meter, probability list, farm/plot association bottom sheet (`Sheet`), and deletion option.
+  - Built `FarmsScreen` (`app/src/screens/FarmsScreen.tsx`) allowing farmers to register farms (name, region, altitude) and add plots (name, crop, area in ha) with inline delete.
+  - Wired Expo Router stack routes (`/history`, `/scan-detail`, `/farms`) in `app/src/app/`, connected automatic diagnosis persistence on `/scan`, and exposed History and Farms navigation from `HomeScreen`.
+  - Authored comprehensive Jest + RNTL test suite in `app/src/screens/__tests__/history_farms.test.tsx` verifying screen flows and Spanish/English translations.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:

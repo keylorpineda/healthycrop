@@ -143,5 +143,50 @@
     "modelDetails": "MobileNetV3-Large Float16 (Café v0.1.0)",
     "datasetsTitle": "Conjuntos de datos",
     "datasetsDetails": "RoCoLe (CC BY 4.0) y BRACOL (CC BY-NC 4.0)"
+  },
+  "history": {
+    "title": "Historial de diagnósticos",
+    "filterAll": "Todos",
+    "filterCrops": "Cultivos",
+    "filterSeverity": "Severidad",
+    "filterFarms": "Finca",
+    "allFarms": "Todas las fincas",
+    "noScansTitle": "Sin diagnósticos",
+    "noScansDescription": "No se encontraron diagnósticos para los filtros seleccionados.",
+    "deletedToast": "Diagnóstico eliminado",
+    "undo": "Deshacer",
+    "syncPending": "Pendiente de sincronizar",
+    "syncSynced": "Sincronizado"
+  },
+  "scanDetail": {
+    "title": "Detalle del diagnóstico",
+    "scannedAt": "Fecha de captura",
+    "location": "Ubicación",
+    "farm": "Finca",
+    "plot": "Lote",
+    "noFarmAssigned": "Sin finca asignada",
+    "assignFarm": "Asignar finca y lote",
+    "modelInfo": "Modelo",
+    "inferenceTime": "Tiempo de inferencia",
+    "deleteScan": "Eliminar diagnóstico",
+    "deleteConfirm": "¿Desea eliminar este diagnóstico?"
+  },
+  "farms": {
+    "title": "Fincas y Lotes",
+    "addFarm": "Nueva finca",
+    "editFarm": "Editar finca",
+    "deleteFarm": "Eliminar finca",
+    "farmName": "Nombre de la finca",
+    "region": "Región o cantón",
+    "altitude": "Altitud (m s.n.m.)",
+    "addPlot": "Nuevo lote",
+    "plotName": "Nombre del lote",
+    "areaHa": "Área (ha)",
+    "selectCrop": "Cultivo",
+    "plotsCount": "lotes",
+    "noFarms": "No hay fincas registradas",
+    "noFarmsDescription": "Registre sus fincas y lotes para organizar los diagnósticos de campo.",
+    "save": "Guardar",
+    "cancel": "Cancelar"
   }
 }

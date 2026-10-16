@@ -98,7 +98,7 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 - [x] Write a Jest test verifying `app/src/ml/` preprocessing against the shared Python fixture from Phase 2 (exact tensor parity within floating-point tolerance).
 - [x] Implement crop-specific photo tips sheet before the first scan of each crop, Camera screen (framing guide pulse, shutter flash + light haptic, gallery picker), and Analyzing screen (scan-line sweep animation).
 - [x] Implement the Result screen: hero photo, severity eased progress meter, confidence count-up, status badge (`healthy` / `watch` / `act now`) with pop-in + matching haptic, low-confidence retake state (`"low confidence — retake the photo"`), local summary + next steps, and agronomic disclaimer.
-- [ ] Implement `expo-sqlite` persistence for farms, plots, scans, and sync queue (`client_uuid`, `sync_status`), plus History screen (crop/status/farm filters, staggered entrance, swipe-to-delete with undo toast, pull-to-refresh), Scan Detail screen (card-to-detail transition), and Farms & Plots management screens.
+- [x] Implement `expo-sqlite` persistence for farms, plots, scans, and sync queue (`client_uuid`, `sync_status`), plus History screen (crop/status/farm filters, staggered entrance, swipe-to-delete with undo toast, pull-to-refresh), Scan Detail screen (card-to-detail transition), and Farms & Plots management screens.
 
 ### Done when
 - Shared preprocessing fixture test passes in both `ml/` (`pytest`) and `app/` (`jest`).
