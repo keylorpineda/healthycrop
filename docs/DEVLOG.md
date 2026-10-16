@@ -101,6 +101,12 @@ This log documents what was built, key architectural decisions, and technical pr
   - Implemented `app/src/i18n/` with Spanish (`es`) as default market language and English (`en`) secondary, featuring symmetric key structure and mandatory agronomic non-replacement disclaimer.
   - Implemented Zustand preferences store (`app/src/stores/preferences.ts`) for language and theme management.
   - Configured Jest + React Native Testing Library (`jest-expo@~52.0.6`, `@testing-library/react-native@^13.3.3`) with Windows/pnpm module transformations and comprehensive unit tests.
+- **Agricultural Design Tokens & Light/Dark Theme System (`#21`)**:
+  - Implemented Costa Rican agroecosystem-inspired design token system in `app/src/theme/`: colors (deep leaf greens, soil/coffee browns, coffee/cacao/banana crop accents, semantic status colors), typography scale, spacing, radii, elevation (Android elevations + iOS shadow parameters), and motion tokens (instant, micro, fast, normal, relaxed, spring presets).
+  - Built `ThemeProvider` and `useTheme()` hook reacting dynamically to user preferences and system appearance.
+  - Implemented `useReducedMotion()` accessibility hook querying system-level accessibility settings.
+  - Added unit test suite in `app/src/theme/__tests__/` asserting token integrity and mathematically proving WCAG 2.1 AA relative luminance contrast ratios (>= 4.5:1 for body text, >= 3.0:1 for large text / UI graphical components) across light and dark palettes.
+  - Refactored `app/src/app/index.tsx` to consume theme tokens exclusively with zero inline hex literals.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:

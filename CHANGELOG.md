@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Agricultural design tokens (`app/src/theme/`) covering colors, typography, spacing, radii, elevation, and motion with dark/light themes and WCAG 2.1 AA mathematical contrast tests (`#21`).
+- `ThemeProvider` and `useTheme()` hook integrating user theme preference with system appearance and reduced motion accessibility (`#21`).
 - Expo SDK 52 Android application setup (`app/app.json`, `app/package.json`) with package `com.keylorpineda.healthycrop`, New Architecture, and Expo Router (`#20`).
 - Internationalization subsystem (`app/src/i18n/`) with Spanish default, English secondary, symmetric translation keys, and mandatory agronomic disclaimer (`#20`).
 - Zustand preferences store (`app/src/stores/preferences.ts`) managing locale, light/dark/system theme, and onboarding state (`#20`).
