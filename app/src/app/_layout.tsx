@@ -4,14 +4,14 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import '@/i18n';
-import { usePreferencesStore } from '@/stores/preferences';
+import { ThemeProvider, useTheme } from '@/theme';
 
-export default function RootLayout(): React.JSX.Element {
-  const theme = usePreferencesStore((state) => state.theme);
+function NavigationStack(): React.JSX.Element {
+  const { isDark } = useTheme();
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style={theme === 'dark' ? 'light' : 'dark'} />
+    <>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -20,6 +20,16 @@ export default function RootLayout(): React.JSX.Element {
       >
         <Stack.Screen name="index" options={{ title: 'HealthyCrop' }} />
       </Stack>
+    </>
+  );
+}
+
+export default function RootLayout(): React.JSX.Element {
+  return (
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <NavigationStack />
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
