@@ -87,3 +87,21 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ### Phase 2 Outcome
 - Done-when status: float16 `.tflite` `< 10 MB` and within `1 pp` ✅; registry and shared fixture committed and tested ✅; test macro-F1 `>= 0.80` not met, with root causes and ablations documented in `docs/EXPERIMENTS.md` (the accepted fallback).
+
+
+---
+
+## Phase 3 — App Shell & Design System (In Progress, 2026-10-16)
+
+### Built
+- **Expo SDK 52 Android Development Build Setup (`#20`)**:
+  - Configured `app/app.json` for Android package `com.keylorpineda.healthycrop` with camera and storage permissions, New Architecture enabled (`newArchEnabled: true`), and file-based routing rooted at `src/app`.
+  - Installed and pinned Expo SDK 52 (`expo@~52.0.49`, `react@18.3.1`, `react-native@0.76.7`, `expo-router@~4.0.22`, `react-native-reanimated@~3.16.7`, `react-native-gesture-handler@~2.20.2`, `react-native-screens@~4.4.0`, `react-native-safe-area-context@4.12.0`, `expo-haptics@~14.0.1`, `expo-image@~2.0.7`, `expo-localization@~16.0.1`, `zustand@^5.0.15`, `i18next@^24.2.3`, `react-i18next@^15.7.4`).
+  - Documented complete pinned toolchain and SDK matrix in `docs/ARCHITECTURE.md` §6.
+  - Implemented `app/src/i18n/` with Spanish (`es`) as default market language and English (`en`) secondary, featuring symmetric key structure and mandatory agronomic non-replacement disclaimer.
+  - Implemented Zustand preferences store (`app/src/stores/preferences.ts`) for language and theme management.
+  - Configured Jest + React Native Testing Library (`jest-expo@~52.0.6`, `@testing-library/react-native@^13.3.3`) with Windows/pnpm module transformations and comprehensive unit tests.
+
+### Problems Solved
+- **Jest pnpm / Windows Module Resolution for React Native**:
+  - `pnpm`'s hoisted directory structure places packages inside `.pnpm/<name>@<ver>/node_modules/<name>`, and Windows uses backslashes in paths. Configured `transformIgnorePatterns` in `app/jest.config.js` to match both Windows separators and `.pnpm` paths so `@react-native`, `react-native`, and `expo` are properly transformed through Babel, resolving syntax errors on Flow type annotations in `@react-native/js-polyfills`.

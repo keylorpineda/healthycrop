@@ -1,0 +1,67 @@
+{
+  "common": {
+    "appName": "HealthyCrop",
+    "tagline": "Offline crop diagnostics",
+    "disclaimer": "HealthyCrop is a decision-support tool and does not replace the judgment of a certified agronomist. Before applying agrochemicals or taking major phytosanitary actions, consult a professional or your local agricultural extension service.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "retry": "Retry",
+    "continue": "Continue",
+    "loading": "Loading...",
+    "analyzing": "Analyzing leaf...",
+    "offlineNotice": "Offline mode active"
+  },
+  "nav": {
+    "home": "Home",
+    "history": "History",
+    "farms": "Farms",
+    "settings": "Settings"
+  },
+  "crops": {
+    "coffee": "Coffee",
+    "cacao": "Cacao",
+    "banana": "Banana"
+  },
+  "status": {
+    "healthy": "Healthy",
+    "watch": "Watch",
+    "actNow": "Act Now",
+    "lowConfidence": "Low confidence — retake photo closer to the leaf"
+  },
+  "diseases": {
+    "coffee": {
+      "healthy": "Healthy leaf",
+      "leaf_rust": "Coffee leaf rust (Hemileia vastatrix)",
+      "leaf_miner": "Coffee leaf miner (Leucoptera coffeella)",
+      "cercospora": "Iron spot / Cercospora (Cercospora coffeicola)",
+      "brown_leaf_spot": "Brown leaf spot / Phoma (Phoma / Ascochyta spp.)",
+      "red_spider_mite": "Red spider mite (Oligonychus yothersi)"
+    },
+    "cacao": {
+      "healthy": "Healthy pod",
+      "monilia": "Frosty pod rot / Monilia (Moniliophthora roreri)",
+      "black_pod": "Black pod rot (Phytophthora palmivora)"
+    },
+    "banana": {
+      "healthy": "Healthy leaf",
+      "black_sigatoka": "Black Sigatoka (Pseudocercospora fijiensis)",
+      "fusarium_wilt": "Fusarium wilt (Fusarium oxysporum)"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "themeSystem": "System default",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "about": "About HealthyCrop",
+    "version": "Version",
+    "credits": "Data credits and licenses",
+    "author": "Author"
+  }
+}
