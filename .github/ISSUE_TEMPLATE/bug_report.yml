@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a reproducible bug or crash in the Android app, FastAPI backend, or ML scripts.
+title: "[Bug] "
+labels: ["type: bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a bug in **HealthyCrop**. Please fill out the details below so we can reproduce and fix the root cause.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Component / Area
+      description: Which part of HealthyCrop is affected?
+      options:
+        - app (Android Expo React Native client)
+        - api (FastAPI backend & sync)
+        - ml (Python data/training/export scripts)
+        - ci (GitHub Actions / build pipeline)
+        - docs (Documentation)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Current Behavior
+      description: A clear and concise description of what is happening.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reproduce the issue.
+      placeholder: |
+        1. Open the app and select 'Coffee'
+        2. Tap 'Scan' and capture a photo offline
+        3. Observe error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead?
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment (Device / Android Version / App Version / OS)
+      description: Details about where the bug occurred.
+      placeholder: "e.g., Samsung Galaxy A54, Android 14, HealthyCrop v1.0.0 (offline mode)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Screenshots
+      description: Paste any relevant stack traces, console output, or attach screenshots (ensure no secrets or tokens are visible).
+      render: shell
+    validations:
+      required: false

@@ -1,0 +1,56 @@
+name: Feature / Task Request
+description: Propose a feature or define an implementation task following the HealthyCrop phase structure.
+title: "[Phase N] "
+labels: ["type: feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for roadmap tasks and feature requests. Every task issue follows the standard **Context / Scope / Out of scope / Acceptance criteria / Dependencies** structure.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Why this is needed (2–4 sentences).
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What to do, listed as bullet points.
+      value: |
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What this issue explicitly does not cover.
+      value: |
+        - 
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Checklist of verifiable outcomes (taken from the phase's "Done when").
+      value: |
+        - [ ] 
+    validations:
+      required: true
+
+  - type: input
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Write `Blocked by #N` where applicable, or `None`.
+      value: "None"
+    validations:
+      required: true

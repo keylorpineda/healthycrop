@@ -1,0 +1,68 @@
+name: Model Prediction Issue
+description: Report a wrong, misclassified, or unexpected crop disease prediction from an on-device TFLite model.
+title: "[Model] Wrong prediction on "
+labels: ["type: bug", "area: ml"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to report an inaccurate or unexpected disease classification. Remember that **HealthyCrop** supports decisions and does not replace a certified agronomist.
+
+  - type: dropdown
+    id: crop
+    attributes:
+      label: Crop Selected
+      options:
+        - Coffee (leaf)
+        - Cacao (pod)
+        - Banana (leaf)
+    validations:
+      required: true
+
+  - type: input
+    id: model_version
+    attributes:
+      label: Model Version & App Version
+      description: Found in Settings -> About or on the scan detail screen.
+      placeholder: "e.g., coffee-v1.0.0 (App v1.0.0)"
+    validations:
+      required: true
+
+  - type: input
+    id: predicted
+    attributes:
+      label: Predicted Class, Severity & Confidence
+      description: What did the app output?
+      placeholder: "e.g., Leaf Rust (Moderate), 84% confidence"
+    validations:
+      required: true
+
+  - type: input
+    id: expected
+    attributes:
+      label: Expected / Agronomist-Verified Condition
+      description: What is the actual condition of the plant part, and how was it verified?
+      placeholder: "e.g., Cercospora (iron spot), confirmed in the field"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: lighting
+    attributes:
+      label: Capture Conditions
+      options:
+        - Direct sunlight (strong shadows/glare)
+        - Diffuse daylight / shade
+        - Overcast / cloudy
+        - Wet leaf or pod after rain
+        - Indoor / artificial light
+    validations:
+      required: true
+
+  - type: textarea
+    id: photo_notes
+    attributes:
+      label: Photo & Field Context
+      description: Attach the photo below (without personal or location metadata) and describe the plant part (e.g., upper vs. underside of coffee leaf, pod maturity stage, region/altitude in Costa Rica).
+    validations:
+      required: true
