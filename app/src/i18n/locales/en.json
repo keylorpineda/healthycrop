@@ -1,8 +1,8 @@
 {
   "common": {
     "appName": "HealthyCrop",
-    "tagline": "Offline crop diagnostics",
-    "disclaimer": "HealthyCrop is a decision-support tool and does not replace the judgment of a certified agronomist. Before applying agrochemicals or taking major phytosanitary actions, consult a professional or your local agricultural extension service.",
+    "tagline": "Offline crop diagnosis",
+    "disclaimer": "HealthyCrop is a decision-support tool and does not replace the judgment of a certified agronomist. Before applying agrochemicals or taking major phytosanitary actions, consult a qualified professional or your regional agricultural extension service.",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
@@ -30,20 +30,20 @@
     "healthy": "Healthy",
     "watch": "Watch",
     "actNow": "Act Now",
-    "lowConfidence": "Low confidence — retake photo closer to the leaf"
+    "lowConfidence": "Low confidence — please take a clearer photo closer to the leaf"
   },
   "diseases": {
     "coffee": {
       "healthy": "Healthy leaf",
       "leaf_rust": "Coffee leaf rust (Hemileia vastatrix)",
       "leaf_miner": "Coffee leaf miner (Leucoptera coffeella)",
-      "cercospora": "Iron spot / Cercospora (Cercospora coffeicola)",
+      "cercospora": "Brown eye spot / Cercospora (Cercospora coffeicola)",
       "brown_leaf_spot": "Brown leaf spot / Phoma (Phoma / Ascochyta spp.)",
       "red_spider_mite": "Red spider mite (Oligonychus yothersi)"
     },
     "cacao": {
       "healthy": "Healthy pod",
-      "monilia": "Frosty pod rot / Monilia (Moniliophthora roreri)",
+      "monilia": "Frosty pod rot (Moniliophthora roreri)",
       "black_pod": "Black pod rot (Phytophthora palmivora)"
     },
     "banana": {
@@ -52,6 +52,28 @@
       "fusarium_wilt": "Fusarium wilt (Fusarium oxysporum)"
     }
   },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "getStarted": "Get Started",
+    "acceptDisclaimer": "I understand and accept the agronomic disclaimer",
+    "slide1Title": "Offline Crop Diagnosis",
+    "slide1Description": "Detect diseases in coffee, cacao, and banana directly on your phone without requiring an internet connection.",
+    "slide2Title": "Calibrated & Accurate AI",
+    "slide2Description": "Deep learning models running on-device with calibrated confidence thresholds and abstention coverage.",
+    "slide3Title": "Agronomic Decision Support",
+    "slide3Description": "HealthyCrop supports your integrated management decisions but does not replace a certified agronomist."
+  },
+  "home": {
+    "selectCrop": "Select Crop to Diagnose",
+    "scanAction": "Scan Crop",
+    "scanHint": "Take a clear, focused photo of the leaf",
+    "recentScans": "Recent Scans",
+    "noScansTitle": "No scans recorded yet",
+    "noScansDescription": "Tap the scan button to assess the phytosanitary condition of your crop.",
+    "offlinePill": "100% Offline",
+    "syncPill": "Local Storage"
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -59,9 +81,15 @@
     "themeSystem": "System default",
     "themeLight": "Light",
     "themeDark": "Dark",
+    "accountSection": "Account & Sync",
+    "accountPlaceholder": "Local mode active (no account required)",
     "about": "About HealthyCrop",
     "version": "Version",
     "credits": "Data credits and licenses",
-    "author": "Author"
+    "author": "Author",
+    "modelTitle": "Active TFLite Model",
+    "modelDetails": "MobileNetV3-Large Float16 (Coffee v0.1.0)",
+    "datasetsTitle": "Datasets & Training",
+    "datasetsDetails": "RoCoLe (CC BY 4.0) and BRACOL (CC BY-NC 4.0)"
   }
 }

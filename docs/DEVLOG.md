@@ -119,6 +119,12 @@ This log documents what was built, key architectural decisions, and technical pr
     - `EmptyState`: Centered empty state layout with icon wrapper, title, description, and primary/secondary action buttons.
     - `ProgressMeter`: Severity-aware progress bar with eased width animation, supporting automatic status mapping (`healthy`, `watch`, `actNow`) and explicit variants.
   - Authored comprehensive Jest + React Native Testing Library test suite in `app/src/components/ui/__tests__/components.test.tsx` verifying rendering, interactions, accessibility roles/labels, and touch target constraints across all 9 primitives.
+- **Onboarding, Home, and Settings Screens (`#23`)**:
+  - Built `OnboardingScreen` (`app/src/screens/OnboardingScreen.tsx`) featuring 3 educational slides (offline diagnostics, calibrated AI, agronomic decision support), animated paging indicators, and mandatory agronomic disclaimer acceptance required to complete onboarding.
+  - Built `HomeScreen` (`app/src/screens/HomeScreen.tsx`) with camera-first layout, large primary Scan CTA for one-handed operation in the field, coffee/cacao/banana crop selection chips, recent scans section with `EmptyState`, and visible offline/sync status indicator.
+  - Built `SettingsScreen` (`app/src/screens/SettingsScreen.tsx`) providing instant `es`/`en` language switcher, light/dark/system theme toggle, account/local mode placeholder, dataset credits and licenses (RoCoLe CC BY 4.0, BRACOL CC BY-NC 4.0), active Float16 model version display, and onboarding replay option.
+  - Configured Expo Router stack navigation in `app/src/app/` (`_layout.tsx`, `index.tsx`, `settings.tsx`, `onboarding.tsx`) with automatic first-time onboarding dispatching.
+  - Authored full unit test coverage in `app/src/screens/__tests__/screens.test.tsx` and updated `app/src/app/__tests__/index.test.tsx`, testing all user flows in Spanish and English with 100% symmetric key structures.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:
