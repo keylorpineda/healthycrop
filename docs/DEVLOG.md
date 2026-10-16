@@ -107,6 +107,18 @@ This log documents what was built, key architectural decisions, and technical pr
   - Implemented `useReducedMotion()` accessibility hook querying system-level accessibility settings.
   - Added unit test suite in `app/src/theme/__tests__/` asserting token integrity and mathematically proving WCAG 2.1 AA relative luminance contrast ratios (>= 4.5:1 for body text, >= 3.0:1 for large text / UI graphical components) across light and dark palettes.
   - Refactored `app/src/app/index.tsx` to consume theme tokens exclusively with zero inline hex literals.
+- **Reusable UI Component Library with Micro-Interactions (`#22`)**:
+  - Implemented 9 reusable UI primitives in `app/src/components/ui/` with zero one-off inline style overrides, strictly utilizing `app/src/theme/` tokens:
+    - `Button`: Press-in spring scale (`0.97`) with snappy release, light haptic feedback via `expo-haptics`, loading indicator, disabled state, and enforced $\ge 48\text{ dp}$ touch target.
+    - `Card`: Surface container with elevated (`elevation.sm`), outlined, and flat variants, supporting pressable interactions with spring feedback.
+    - `Chip`: Crop selector (`coffee`, `cacao`, `banana`) with spring scale, haptic selection, crop color morphing, and accessible checkbox state.
+    - `Badge`: Status and crop indicator pills using WCAG AA-calibrated palettes (`healthy`, `watch`, `actNow`, `lowConfidence`, crop accents).
+    - `Sheet`: Animated bottom sheet modal with sliding/fading transitions, grab handle, accessible dismiss backdrop, and close button.
+    - `Toast`: In-app notification card with slide-in animation, haptic announcements, auto-dismiss timer, and accessible live regions (`assertive` for errors, `polite` for info/success).
+    - `Skeleton`: Shimmer loading placeholder with repeating pulse animation and static fallback for reduced motion, properly hidden from accessibility screen readers.
+    - `EmptyState`: Centered empty state layout with icon wrapper, title, description, and primary/secondary action buttons.
+    - `ProgressMeter`: Severity-aware progress bar with eased width animation, supporting automatic status mapping (`healthy`, `watch`, `actNow`) and explicit variants.
+  - Authored comprehensive Jest + React Native Testing Library test suite in `app/src/components/ui/__tests__/components.test.tsx` verifying rendering, interactions, accessibility roles/labels, and touch target constraints across all 9 primitives.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:
