@@ -74,6 +74,58 @@
     "offlinePill": "100% Offline",
     "syncPill": "Local Storage"
   },
+  "camera": {
+    "tipsTitle": "Photo Tips",
+    "tipsUnderstood": "Got it, take photo",
+    "shutter": "Capture photo",
+    "gallery": "Pick from gallery",
+    "permissionTitle": "Camera Permission Required",
+    "permissionMessage": "HealthyCrop needs camera access to diagnose your crops directly in the field.",
+    "grantPermission": "Grant Permission",
+    "framingHint": "Frame the leaf inside the guide box"
+  },
+  "photoTips": {
+    "coffee": {
+      "title": "Coffee Photo Tips",
+      "tip1": "Focus on the underside of the leaf where rust pustules and leaf miners appear.",
+      "tip2": "Avoid harsh direct sunlight; cast a gentle shadow with your body if needed.",
+      "tip3": "Hold the leaf 15–20 cm away, sharply focused and steady."
+    },
+    "cacao": {
+      "title": "Cacao Photo Tips",
+      "tip1": "Photograph the entire pod or the visible frosty pod / black pod lesion.",
+      "tip2": "Ensure the pod fills most of the frame.",
+      "tip3": "Wipe the phone lens clean to avoid moisture blur in humid fields."
+    },
+    "banana": {
+      "title": "Banana Photo Tips",
+      "tip1": "Capture the streaks and spots along the leaf veins.",
+      "tip2": "Frame the transition zone between healthy tissue and sigatoka lesions.",
+      "tip3": "Hold the leaf steady against the wind before shooting."
+    }
+  },
+  "analyzing": {
+    "title": "Analyzing crop...",
+    "subtitle": "Running neural network model on-device...",
+    "offline": "100% local on-device processing"
+  },
+  "result": {
+    "title": "Diagnosis Result",
+    "confidence": "Confidence level",
+    "statusHealthy": "Healthy crop",
+    "statusWatch": "Under observation",
+    "statusActNow": "Phytosanitary action required",
+    "lowConfidenceTitle": "Low confidence — retake the photo",
+    "lowConfidenceAdvice": "The image lacks sharpness or framing for reliable classification. Please retake closer to the leaf with good lighting.",
+    "retake": "Retake photo",
+    "save": "Save to history",
+    "done": "Done",
+    "nextSteps": "Recommended Next Steps",
+    "probabilities": "Probability distribution",
+    "adviceHealthy": "Maintain standard agronomic practices and continue periodic plot monitoring.",
+    "adviceWatch": "Increase inspection frequency and evaluate symptom dispersion on neighboring plants.",
+    "adviceActNow": "Consult official extension service guides or a certified agronomist immediately before applying treatments."
+  },
   "settings": {
     "title": "Settings",
     "language": "Language",

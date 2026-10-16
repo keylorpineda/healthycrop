@@ -56,3 +56,58 @@ jest.mock('react-native-fast-tflite', () => ({
   }),
 }));
 
+// Mock expo-camera
+jest.mock('expo-camera', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+
+  const CameraView = React.forwardRef((props: any, ref: any) => {
+    React.useImperativeHandle(ref, () => ({
+      takePictureAsync: jest.fn().mockResolvedValue({
+        uri: 'file:///mock/captured_photo.jpg',
+        width: 1080,
+        height: 1920,
+      }),
+    }));
+    return React.createElement(View, { ...props, testID: props.testID || 'camera-view' });
+  });
+
+  return {
+    CameraView,
+    useCameraPermissions: () => [{ granted: true }, jest.fn().mockResolvedValue({ granted: true })],
+  };
+});
+
+// Mock expo-image-picker
+jest.mock('expo-image-picker', () => ({
+  launchImageLibraryAsync: jest.fn().mockResolvedValue({
+    canceled: false,
+    assets: [{ uri: 'file:///mock/gallery_photo.jpg', width: 800, height: 600 }],
+  }),
+  requestMediaLibraryPermissionsAsync: jest.fn().mockResolvedValue({ status: 'granted', granted: true }),
+  MediaTypeOptions: {
+    Images: 'Images',
+  },
+}));
+
+// Mock expo-image-manipulator
+jest.mock('expo-image-manipulator', () => {
+  const jpeg = require('jpeg-js');
+  const mockRaw = new Uint8Array(224 * 224 * 4);
+  const encoded = jpeg.encode({ width: 224, height: 224, data: mockRaw }, 50);
+  const base64Jpeg = Buffer.from(encoded.data).toString('base64');
+
+  return {
+    manipulateAsync: jest.fn().mockResolvedValue({
+      uri: 'file:///mock/manipulated.jpg',
+      base64: base64Jpeg,
+      width: 224,
+      height: 224,
+    }),
+    SaveFormat: {
+      JPEG: 'jpeg',
+      PNG: 'png',
+    },
+  };
+});
+

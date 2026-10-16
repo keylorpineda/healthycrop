@@ -96,8 +96,8 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 ### Tasks
 - [x] Implement the on-device inference pipeline in `app/src/ml/`: `expo-camera` / `expo-image-picker` -> `expo-image-manipulator` (`224x224` resize) -> `jpeg-js` raw RGB decoding -> training normalization -> `react-native-fast-tflite` execution with bundled `registry.json`.
 - [x] Write a Jest test verifying `app/src/ml/` preprocessing against the shared Python fixture from Phase 2 (exact tensor parity within floating-point tolerance).
-- [ ] Implement crop-specific photo tips sheet before the first scan of each crop, Camera screen (framing guide pulse, shutter flash + light haptic, gallery picker), and Analyzing screen (scan-line sweep animation).
-- [ ] Implement the Result screen: hero photo, severity eased progress meter, confidence count-up, status badge (`healthy` / `watch` / `act now`) with pop-in + matching haptic, low-confidence retake state (`"low confidence — retake the photo"`), local summary + next steps, and agronomic disclaimer.
+- [x] Implement crop-specific photo tips sheet before the first scan of each crop, Camera screen (framing guide pulse, shutter flash + light haptic, gallery picker), and Analyzing screen (scan-line sweep animation).
+- [x] Implement the Result screen: hero photo, severity eased progress meter, confidence count-up, status badge (`healthy` / `watch` / `act now`) with pop-in + matching haptic, low-confidence retake state (`"low confidence — retake the photo"`), local summary + next steps, and agronomic disclaimer.
 - [ ] Implement `expo-sqlite` persistence for farms, plots, scans, and sync queue (`client_uuid`, `sync_status`), plus History screen (crop/status/farm filters, staggered entrance, swipe-to-delete with undo toast, pull-to-refresh), Scan Detail screen (card-to-detail transition), and Farms & Plots management screens.
 
 ### Done when
