@@ -75,3 +75,12 @@ This log documents what was built, key architectural decisions, and technical pr
   - Configured `develop` as the default protected integration branch (receiving rebase-merged `--rebase` work PRs) and `main` as the protected release branch (receiving merge-commit `--merge` release PRs `chore(release): vX.Y.Z` from `develop`).
 
 
+- **Float16 TFLite Export, Confidence Threshold, Registry & Shared Fixture (`#18`)**:
+  - Implemented [`ml/src/healthycrop_ml/export_tflite.py`](../ml/src/healthycrop_ml/export_tflite.py) and [`ml/scripts/export_coffee_tflite.py`](../ml/scripts/export_coffee_tflite.py): strips training-only `aug_*` and `head_dropout` layers, exports a batch-1 SavedModel, converts it to float16 TFLite, and evaluates it with the TFLite interpreter on all `426` validation and `429` test images.
+  - Coffee model: `6,061,508` bytes, `81.12%` TFLite test accuracy vs `81.35%` Keras (`0.23 pp` drop, `99.77%` top-1 agreement).
+  - Calibrated the abstention threshold on validation as the lowest top-1 probability reaching `>= 90%` accepted precision: `0.79` (`90.9%` precision at `69.5%` coverage on val; `87.7%` precision at `72.0%` coverage on test). Written to [`ml/models/coffee/registry.json`](../ml/models/coffee/registry.json) together with labels, input spec, normalization, model SHA-256, and metrics.
+  - Generated [`ml/fixtures/preprocessing_fixture_224.json`](../ml/fixtures/preprocessing_fixture_224.json): seeded `224x224` RGB bytes, probe pixels, and the SHA-256 of the expected little-endian float32 tensor, verified by `ml/tests/test_preprocessing_fixture.py` (Jest side lands in Phase 4).
+
+### Problems Solved
+- **Keras 3 Variables Not Frozen by Concrete-Function Conversion**:
+  - `TFLiteConverter.from_concrete_functions` on a Keras 3 model produced a `226 KB` model that output `NaN` (weights stayed as unresolved resource variables). Exporting through `keras.export.ExportArchive` to a SavedModel and converting with `from_saved_model` froze all weights (`6.06 MB`) and matched Keras outputs.
