@@ -43,6 +43,9 @@ This log documents what was built, key architectural decisions, and technical pr
   - Created [`ml/configs/coffee.yaml`](../ml/configs/coffee.yaml) defining the 6-class coffee taxonomy (`healthy`, `leaf_rust` + severity `1`–`4`, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), `224x224` target size, and `70/15/15` split parameters.
   - Implemented [`ml/src/healthycrop_ml/config.py`](../ml/src/healthycrop_ml/config.py), [`ml/src/healthycrop_ml/preprocess.py`](../ml/src/healthycrop_ml/preprocess.py), [`ml/src/healthycrop_ml/dedup.py`](../ml/src/healthycrop_ml/dedup.py), [`ml/src/healthycrop_ml/split.py`](../ml/src/healthycrop_ml/split.py), [`ml/scripts/prepare_coffee.py`](../ml/scripts/prepare_coffee.py), and [`ml/tests/test_prepare_coffee.py`](../ml/tests/test_prepare_coffee.py).
   - Processed `2,902` mapped raw images (`1,560` RoCoLe + `1,339` BRACOL valid whole leaves after dropping `62` undetermined stress rows), removed `78` near-duplicate images (`d_Hamming <= 2`), and produced `2,824` leak-free `224x224` RGB images across `train` (`1,978`), `val` (`422`), and `test` (`424`).
+- **Coffee Data Report & Small-Class Merging Evaluation (`#15`)**:
+  - Implemented [`ml/src/healthycrop_ml/report.py`](../ml/src/healthycrop_ml/report.py), [`ml/scripts/generate_coffee_report.py`](../ml/scripts/generate_coffee_report.py), and [`ml/tests/test_report.py`](../ml/tests/test_report.py).
+  - Generated [`docs/data_reports/coffee.md`](data_reports/coffee.md) and [`docs/assets/data_reports/coffee_grid.png`](assets/data_reports/coffee_grid.png), confirming all 6 primary coffee classes exceed the `50` training-image threshold (`cercospora` smallest at `99` train images) and documenting why `leaf_rust` severity levels (`1`–`4`, where `severity=4` has only `36` train images) are consolidated into `leaf_rust` with `severity` metadata.
 
 ### Problems Solved
 - **Upstream Truncated BRACOL ZIP Archive**:
