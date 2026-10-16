@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-16
+
 ### Added
 
 - Offline-first SQLite persistence (`expo-sqlite`, `expo-crypto`), repository layer for farms, plots, and scans with sync queue metadata, History screen with multi-filter and swipe-to-delete with undo, Scan Detail screen with farm/plot location assignment, and Farms/Plots CRUD screens (`#26`).
