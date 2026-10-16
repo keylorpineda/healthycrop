@@ -114,9 +114,12 @@ healthycrop/
 
 ## Roadmap & Milestones
 
-- **MVP (`v1.0.0`)**: 3 crop models (Coffee, Cacao, Banana), offline on-device TFLite diagnosis, local SQLite history & farm/plot tracking, optional email/password account + idempotent cloud sync, Gemini RAG explanations citing official manuals, and GitHub Release APK.
-- **`v1.1`**: Google Sign-In, OpenStreetMap plot map with disease hotspots, and conservative rule-based Open-Meteo weather risk alerts (`CC BY 4.0`).
-- **`v1.2`**: Monthly cloud-masked Sentinel-2 NDVI per plot via Google Earth Engine (noncommercial Community tier) and additional crops.
+- **`v0.1.0` — Foundation & Coffee ML** *(Phases 0–2, due `2026-10-30`)*: Monorepo & CI setup, Community Standards, RoCoLe + BRACOL coffee dataset pipeline, and fine-tuned `MobileNetV3-Large` float16 TFLite coffee model (`< 10 MB`) with shared preprocessing fixture.
+- **`v0.2.0` — Offline Android App & Coffee Diagnosis** *(Phases 3–4, due `2026-11-13`)*: Expo Android development build, agricultural design system & UI component library, camera/gallery capture, on-device TFLite inference, Result screen, and `expo-sqlite` offline history & farm/plot tracking.
+- **`v0.3.0` — Multi-Crop Models (Cacao & Banana)** *(Phase 5, due `2026-11-27`)*: Cacao pod (YOLO cropped) and Banana leaf dataset preparation, `MobileNetV3-Large` training & float16 TFLite export, and 3-crop offline diagnosis in the app.
+- **`v1.0.0` — Cloud Sync, Gemini RAG & Release** *(Phases 6–8, due `2026-12-11`)*: FastAPI backend, optional email/password auth + idempotent cloud sync, Gemini RAG explanations citing official manuals, Costa Rican field validation, and `v1.0.0` APK release.
+- **`v1.1.0` — Maps, Hotspots & Weather Alerts** *(due `2026-12-28`)*: Google Sign-In, OpenStreetMap plot map with disease hotspots, and conservative rule-based Open-Meteo weather risk alerts (`CC BY 4.0`).
+- **`v1.2.0` — Earth Engine NDVI & Crop Expansion** *(due `2027-01-15`)*: Monthly cloud-masked Sentinel-2 NDVI per plot via Google Earth Engine (noncommercial Community tier) and additional crops.
 
 See [`docs/PLAN.md`](docs/PLAN.md) for the detailed phase breakdown.
 
