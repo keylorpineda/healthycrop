@@ -52,6 +52,28 @@
       "fusarium_wilt": "Marchitez por Fusarium (Fusarium oxysporum)"
     }
   },
+  "onboarding": {
+    "skip": "Omitir",
+    "next": "Siguiente",
+    "getStarted": "Comenzar",
+    "acceptDisclaimer": "Entiendo y acepto el descargo de responsabilidad agronómica",
+    "slide1Title": "Diagnóstico fuera de línea",
+    "slide1Description": "Detecte enfermedades en café, cacao y banano directamente desde su teléfono sin necesidad de conexión a internet.",
+    "slide2Title": "Modelos precisos y calibrados",
+    "slide2Description": "Modelos de aprendizaje profundo ejecutados localmente con evaluación de confianza y umbrales de abstención.",
+    "slide3Title": "Herramienta de apoyo al productor",
+    "slide3Description": "HealthyCrop apoya sus decisiones de manejo integrado pero no reemplaza la inspección de un agrónomo certificado."
+  },
+  "home": {
+    "selectCrop": "Cultivo a diagnosticar",
+    "scanAction": "Escanear cultivo",
+    "scanHint": "Tome una foto clara y enfocada de la hoja",
+    "recentScans": "Diagnósticos recientes",
+    "noScansTitle": "Sin diagnósticos registrados",
+    "noScansDescription": "Presione el botón de escaneo para evaluar el estado fitosanitario de su cultivo.",
+    "offlinePill": "100% Fuera de línea",
+    "syncPill": "Almacenamiento local"
+  },
   "settings": {
     "title": "Ajustes",
     "language": "Idioma",
@@ -59,9 +81,15 @@
     "themeSystem": "Automático (sistema)",
     "themeLight": "Claro",
     "themeDark": "Oscuro",
+    "accountSection": "Cuenta y sincronización",
+    "accountPlaceholder": "Modo local activo (no requiere cuenta)",
     "about": "Acerca de HealthyCrop",
     "version": "Versión",
     "credits": "Créditos y licencias de datos",
-    "author": "Autor"
+    "author": "Autor",
+    "modelTitle": "Modelo TFLite activo",
+    "modelDetails": "MobileNetV3-Large Float16 (Café v0.1.0)",
+    "datasetsTitle": "Conjuntos de datos",
+    "datasetsDetails": "RoCoLe (CC BY 4.0) y BRACOL (CC BY-NC 4.0)"
   }
 }
