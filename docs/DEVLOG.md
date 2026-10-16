@@ -125,6 +125,14 @@ This log documents what was built, key architectural decisions, and technical pr
   - Built `SettingsScreen` (`app/src/screens/SettingsScreen.tsx`) providing instant `es`/`en` language switcher, light/dark/system theme toggle, account/local mode placeholder, dataset credits and licenses (RoCoLe CC BY 4.0, BRACOL CC BY-NC 4.0), active Float16 model version display, and onboarding replay option.
   - Configured Expo Router stack navigation in `app/src/app/` (`_layout.tsx`, `index.tsx`, `settings.tsx`, `onboarding.tsx`) with automatic first-time onboarding dispatching.
   - Authored full unit test coverage in `app/src/screens/__tests__/screens.test.tsx` and updated `app/src/app/__tests__/index.test.tsx`, testing all user flows in Spanish and English with 100% symmetric key structures.
+- **On-Device TFLite Inference Pipeline & Shared Fixture Parity (`#24`)**:
+  - Installed and pinned native image processing and ML packages (`expo-image-manipulator@~13.0.6`, `jpeg-js@^0.4.4`, `react-native-fast-tflite@1.6.1`, and `@types/node@26.6.5`), updating `docs/ARCHITECTURE.md` §6.
+  - Bundled Coffee model registry (`app/src/ml/models/coffee/registry.json`) and shared preprocessing fixture (`app/src/ml/fixtures/preprocessing_fixture_224.json`).
+  - Implemented core ML pipeline in `app/src/ml/`:
+    - `preprocess.ts`: JPEG decompression via `jpeg-js` (yielding exact 3-channel RGB data), `base64ToUint8Array` binary decoder, and `normalizeRgbTensor` producing normalized float32 tensors in range `[-1.0, 1.0]`.
+    - `inference.ts`: Numerically stable `softmax`, `evaluatePrediction` assessing probabilities against the `0.79` calibrated confidence threshold, disease severity mapping, and high-level `runInference` pipeline.
+  - Authored cross-platform preprocessing parity test (`app/src/ml/__tests__/parity.test.ts`) loading the Phase 2 Python fixture and verifying exact tensor parity across 35 coordinate canvas probes and overall tensor summary statistics (min `-1.0`, max `1.0`, sum `-447.15`) within float32 tolerance (`1e-5`).
+  - Authored unit test suite (`app/src/ml/__tests__/inference.test.ts`) verifying softmax stability, threshold abstention, disease severity mapping, and mock runner execution.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:
