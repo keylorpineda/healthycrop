@@ -33,7 +33,7 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ---
 
-## Phase 1 — Coffee Data & Baseline (In Progress, 2026-10-16)
+## Phase 1 — Coffee Data & Baseline (2026-10-16)
 
 ### Built
 - **Dataset Verification & Download Pipeline (`#13`)**:
@@ -42,14 +42,23 @@ This log documents what was built, key architectural decisions, and technical pr
 - **Coffee Data Preparation, Perceptual-Hash Deduplication & Grouped Split (`#14`)**:
   - Created [`ml/configs/coffee.yaml`](../ml/configs/coffee.yaml) defining the 6-class coffee taxonomy (`healthy`, `leaf_rust` + severity `1`–`4`, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), `224x224` target size, and `70/15/15` split parameters.
   - Implemented [`ml/src/healthycrop_ml/config.py`](../ml/src/healthycrop_ml/config.py), [`ml/src/healthycrop_ml/preprocess.py`](../ml/src/healthycrop_ml/preprocess.py), [`ml/src/healthycrop_ml/dedup.py`](../ml/src/healthycrop_ml/dedup.py), [`ml/src/healthycrop_ml/split.py`](../ml/src/healthycrop_ml/split.py), [`ml/scripts/prepare_coffee.py`](../ml/scripts/prepare_coffee.py), and [`ml/tests/test_prepare_coffee.py`](../ml/tests/test_prepare_coffee.py).
-  - Processed `2,902` mapped raw images (`1,560` RoCoLe + `1,339` BRACOL valid whole leaves after dropping `62` undetermined stress rows), removed `78` near-duplicate images (`d_Hamming <= 2`), and produced `2,824` leak-free `224x224` RGB images across `train` (`1,978`), `val` (`422`), and `test` (`424`).
+  - Processed `2,902` mapped raw images (`1,560` RoCoLe + `1,342` BRACOL valid whole leaves after dropping `62` undetermined stress rows), removed `78` near-duplicate images (`d_Hamming <= 2`), and produced `2,824` leak-free `224x224` RGB images across `train` (`1,969`), `val` (`426`), and `test` (`429`).
 - **Coffee Data Report & Small-Class Merging Evaluation (`#15`)**:
   - Implemented [`ml/src/healthycrop_ml/report.py`](../ml/src/healthycrop_ml/report.py), [`ml/scripts/generate_coffee_report.py`](../ml/scripts/generate_coffee_report.py), and [`ml/tests/test_report.py`](../ml/tests/test_report.py).
-  - Generated [`docs/data_reports/coffee.md`](data_reports/coffee.md) and [`docs/assets/data_reports/coffee_grid.png`](assets/data_reports/coffee_grid.png), confirming all 6 primary coffee classes exceed the `50` training-image threshold (`cercospora` smallest at `99` train images) and documenting why `leaf_rust` severity levels (`1`–`4`, where `severity=4` has only `36` train images) are consolidated into `leaf_rust` with `severity` metadata.
+  - Generated [`docs/data_reports/coffee.md`](data_reports/coffee.md) and [`docs/assets/data_reports/coffee_grid.png`](assets/data_reports/coffee_grid.png), confirming all 6 primary coffee classes exceed the `50` training-image threshold (`cercospora` smallest at `96` train images) and documenting why `leaf_rust` severity levels (`1`–`4`, where `severity=4` has only `42` train images) are consolidated into `leaf_rust` with `severity` metadata.
+- **Frozen-Backbone `MobileNetV3-Large` Baseline & Metrics (`#16`)**:
+  - Implemented [`ml/src/healthycrop_ml/evaluate.py`](../ml/src/healthycrop_ml/evaluate.py), [`ml/src/healthycrop_ml/model.py`](../ml/src/healthycrop_ml/model.py), [`ml/src/healthycrop_ml/train.py`](../ml/src/healthycrop_ml/train.py), [`ml/scripts/train_coffee.py`](../ml/scripts/train_coffee.py), [`ml/notebooks/01_coffee_training.ipynb`](../ml/notebooks/01_coffee_training.ipynb), and [`ml/tests/test_model_and_eval.py`](../ml/tests/test_model_and_eval.py).
+  - Trained the frozen-backbone baseline (`coffee-v0.1.0-baseline`), achieving **`82.16%` validation accuracy (`0.7637` validation Macro-F1)** and **`79.72%` held-out test accuracy (`0.7135` test Macro-F1)**, with confusion matrix saved to [`docs/assets/confusion_matrices/coffee_baseline.png`](assets/confusion_matrices/coffee_baseline.png) and full per-class metrics logged in [`docs/EXPERIMENTS.md`](EXPERIMENTS.md).
+
+### Decisions
+1. **Explicit `[-1.0, 1.0]` Input Normalization (`include_preprocessing=False`)**:
+   - Configured `MobileNetV3Large(include_preprocessing=False)` and explicit `(rgb - 127.5) / 127.5` tensor normalization in `preprocess.py` so the Python training pipeline and the React Native `app/src/ml/` inference pipeline operate on the exact same `float32` input tensor range (`[-1.0, 1.0]`).
 
 ### Problems Solved
 - **Upstream Truncated BRACOL ZIP Archive**:
   - Mendeley's hosted `BRACOL_coffee_leaf_ images_datasets.zip` (`164,516,964` bytes) was uploaded truncated mid-entry at EOF (`leaf/images/688.jpg`), lacking a ZIP central directory (`PK\x05\x06`). Implemented `_extract_zip_local_headers_safe` in [`ml/src/healthycrop_ml/download.py`](../ml/src/healthycrop_ml/download.py) to sequentially parse `PK\x03\x04` local file headers, inflate and CRC-verify all `1,401` intact whole-leaf images plus `leaf/dataset.csv`, and safely skip the single truncated trailing entry.
 - **Cross-Plant Duplicate Leakage in RoCoLe**:
   - `imagehash.phash` deduplication discovered `78` exact/near-duplicate photos in RoCoLe that had been assigned to *different* plant IDs upstream (e.g., `C1P38E1` identical to `C1P35E1`). Deduplicating before `grouped_stratified_split` prevented those duplicate photos from leaking across `train`, `val`, and `test`.
+- **Keras 3 `RandomContrast` Default `value_range=(0, 255)` Clipping Bug**:
+  - In Keras 3, `layers.RandomContrast` defaults to `value_range=(0, 255)` and clips output values to that range during training. When fed `[-1.0, 1.0]` normalized tensors, it clipped all negative pixel values (`[-1.0, 0.0)`) to `0.0` during training while leaving validation unclipped, capping validation Macro-F1 at `0.4075`. Explicitly passing `value_range=(-1.0, 1.0)` and adding `LayerNormalization` before the classification head jumped frozen-backbone validation Macro-F1 from `0.4075` to **`0.7637`** (`79.72%` test accuracy).
 
