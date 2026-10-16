@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Reusable UI component library in `app/src/components/ui/` (`Button`, `Card`, `Chip`, `Badge`, `Sheet`, `Toast`, `Skeleton`, `EmptyState`, `ProgressMeter`) with spring micro-interactions, haptics, >= 48 dp touch targets, reduced motion support, and RNTL unit tests (`#22`).
 - Agricultural design tokens (`app/src/theme/`) covering colors, typography, spacing, radii, elevation, and motion with dark/light themes and WCAG 2.1 AA mathematical contrast tests (`#21`).
 - `ThemeProvider` and `useTheme()` hook integrating user theme preference with system appearance and reduced motion accessibility (`#21`).
 - Expo SDK 52 Android application setup (`app/app.json`, `app/package.json`) with package `com.keylorpineda.healthycrop`, New Architecture, and Expo Router (`#20`).
