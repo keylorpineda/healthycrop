@@ -30,3 +30,23 @@ This log documents what was built, key architectural decisions, and technical pr
 ### Problems Solved
 - **Missing Global `python` Alias on Windows**:
   - On Windows 11, the default Microsoft Store `python.exe` execution alias returned an exit code `1` because Python was not installed globally on `PATH`. Configured `uv` (`uv python install 3.12` / `uv run --python 3.12`) to manage an isolated Python 3.12 runtime automatically for both `api/` and `ml/`.
+
+---
+
+## Phase 1 — Coffee Data & Baseline (In Progress, 2026-10-16)
+
+### Built
+- **Dataset Verification & Download Pipeline (`#13`)**:
+  - Verified **RoCoLe** (`10.17632/c5yvn32dzg.2`) and **BRACOL** (`10.17632/yy2k5y8mxg.1`) licenses (`CC BY 4.0`) via Mendeley Data API and documented exact metadata in [`docs/DATASETS.md`](DATASETS.md).
+  - Implemented [`ml/src/healthycrop_ml/download.py`](../ml/src/healthycrop_ml/download.py), [`ml/scripts/download_rocole.py`](../ml/scripts/download_rocole.py), [`ml/scripts/download_bracol.py`](../ml/scripts/download_bracol.py), and [`ml/tests/test_download.py`](../ml/tests/test_download.py).
+- **Coffee Data Preparation, Perceptual-Hash Deduplication & Grouped Split (`#14`)**:
+  - Created [`ml/configs/coffee.yaml`](../ml/configs/coffee.yaml) defining the 6-class coffee taxonomy (`healthy`, `leaf_rust` + severity `1`–`4`, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), `224x224` target size, and `70/15/15` split parameters.
+  - Implemented [`ml/src/healthycrop_ml/config.py`](../ml/src/healthycrop_ml/config.py), [`ml/src/healthycrop_ml/preprocess.py`](../ml/src/healthycrop_ml/preprocess.py), [`ml/src/healthycrop_ml/dedup.py`](../ml/src/healthycrop_ml/dedup.py), [`ml/src/healthycrop_ml/split.py`](../ml/src/healthycrop_ml/split.py), [`ml/scripts/prepare_coffee.py`](../ml/scripts/prepare_coffee.py), and [`ml/tests/test_prepare_coffee.py`](../ml/tests/test_prepare_coffee.py).
+  - Processed `2,902` mapped raw images (`1,560` RoCoLe + `1,339` BRACOL valid whole leaves after dropping `62` undetermined stress rows), removed `78` near-duplicate images (`d_Hamming <= 2`), and produced `2,824` leak-free `224x224` RGB images across `train` (`1,978`), `val` (`422`), and `test` (`424`).
+
+### Problems Solved
+- **Upstream Truncated BRACOL ZIP Archive**:
+  - Mendeley's hosted `BRACOL_coffee_leaf_ images_datasets.zip` (`164,516,964` bytes) was uploaded truncated mid-entry at EOF (`leaf/images/688.jpg`), lacking a ZIP central directory (`PK\x05\x06`). Implemented `_extract_zip_local_headers_safe` in [`ml/src/healthycrop_ml/download.py`](../ml/src/healthycrop_ml/download.py) to sequentially parse `PK\x03\x04` local file headers, inflate and CRC-verify all `1,401` intact whole-leaf images plus `leaf/dataset.csv`, and safely skip the single truncated trailing entry.
+- **Cross-Plant Duplicate Leakage in RoCoLe**:
+  - `imagehash.phash` deduplication discovered `78` exact/near-duplicate photos in RoCoLe that had been assigned to *different* plant IDs upstream (e.g., `C1P38E1` identical to `C1P35E1`). Deduplicating before `grouped_stratified_split` prevented those duplicate photos from leaking across `train`, `val`, and `test`.
+

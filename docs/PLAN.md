@@ -11,9 +11,11 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 | **`v0.1.0 — Foundation & Coffee ML`** | Phases 0–2 | `#10`–`#19` (10) | `2026-10-30` | Monorepo, CI, Community Standards, RoCoLe/BRACOL data pipeline, fine-tuned Coffee float16 TFLite model + shared fixture |
 | **`v0.2.0 — Offline Android App & Coffee Diagnosis`** | Phases 3–4 | `#20`–`#26` (7) | `2026-11-13` | Expo Android dev build, design system & UI library, camera/gallery capture, on-device TFLite inference, SQLite history |
 | **`v0.3.0 — Multi-Crop Models (Cacao & Banana)`** | Phase 5 | `#27`–`#31` (5) | `2026-11-27` | Cacao pod and Banana leaf datasets prepared, `MobileNetV3-Large` float16 TFLite models bundled, 3-crop offline diagnosis |
-| **`v1.0.0 — Cloud Sync, Gemini RAG & Release`** | Phases 6–8 | `#32`–`#39` (8) | `2026-12-11` | FastAPI backend, Firebase Auth & Admin Firestore isolation, idempotent sync, Gemini RAG explanations, CR field validation, APK release |
-| **`v1.1.0 — Maps, Hotspots & Weather Alerts`** | Post-MVP | `#40`–`#42` (Epics) | `2026-12-28` | Google Sign-In, OpenStreetMap plot map with hotspots, rule-based Open-Meteo weather risk alerts |
-| **`v1.2.0 — Earth Engine NDVI & Crop Expansion`** | Post-MVP | `#43`–`#44` (Epics) | `2027-01-15` | Monthly cloud-masked Sentinel-2 NDVI per plot via Google Earth Engine Community tier, additional crops |
+| **`v0.4.0 — Accounts & Sync`** | Phase 6 | `#32`–`#34`, `#46`–`#48` (6) | `2026-12-04` | FastAPI backend, Firebase Auth & Admin Firestore isolation, farms/plots CRUD, idempotent scan sync, signed Cloudinary uploads, Android sync engine |
+| **`v0.5.0 — AI Explanations (Gemini RAG)`** | Phase 7 | `#35`–`#37`, `#49`–`#50` (5) | `2026-12-14` | Official manual fetcher/chunker, local RAG embedding index, `POST /explanations` with citations & refusal, caching/rate-limiting, Android UI integration |
+| **`v1.0.0 — Field Validation & Release`** | Phase 8 | `#38`–`#39`, `#51`–`#53` (5) | `2026-12-22` | Costa Rican field validation & failure analysis, WCAG AA accessibility audit, final metrics/docs, and `v1.0.0` APK + models release |
+| **`v1.1.0 — Maps, Hotspots & Weather Alerts`** | Post-MVP | `#40`–`#42` (Epics) | `2027-01-08` | Google Sign-In, OpenStreetMap plot map with hotspots, rule-based Open-Meteo weather risk alerts |
+| **`v1.2.0 — Earth Engine NDVI & Crop Expansion`** | Post-MVP | `#43`–`#44` (Epics) | `2027-01-25` | Monthly cloud-masked Sentinel-2 NDVI per plot via Google Earth Engine Community tier, additional crops |
 
 ---
 
@@ -42,8 +44,8 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 ### Tasks
 - [x] Inspect and verify licenses for **RoCoLe** (DOI `10.17632/c5yvn32dzg.2`) and **BRACOL** (Mendeley `yy2k5y8mxg`); record full metadata and citations in `docs/DATASETS.md`.
 - [x] Implement idempotent, checksum-verified download scripts `ml/scripts/download_rocole.py` and `ml/scripts/download_bracol.py` targeting `ml/data/raw/<dataset>/` (with clear manual fallback + structural verification if automated download is blocked by host).
-- [ ] Create `ml/configs/coffee.yaml` defining class taxonomy mapping (`healthy`, `leaf_rust` + severity, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), image size (`224x224`), and split parameters.
-- [ ] Implement `ml/scripts/prepare_coffee.py` (with unit-tested core logic in `ml/src/`) to fix EXIF orientation, drop corrupt images, convert to RGB, filter BRACOL to whole-leaf images, deduplicate across sources via perceptual hash (`imagehash`), and generate a leakage-free `70/15/15` split grouped by `group_id` (plant) and stratified by label (`seed=42`).
+- [x] Create `ml/configs/coffee.yaml` defining class taxonomy mapping (`healthy`, `leaf_rust` + severity, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), image size (`224x224`), and split parameters.
+- [x] Implement `ml/scripts/prepare_coffee.py` (with unit-tested core logic in `ml/src/`) to fix EXIF orientation, drop corrupt images, convert to RGB, filter BRACOL to whole-leaf images, deduplicate across sources via perceptual hash (`imagehash`), and generate a leakage-free `70/15/15` split grouped by `group_id` (plant) and stratified by label (`seed=42`).
 - [ ] Evaluate any coffee class with `< 50` training images for merging and document the decision; generate `docs/data_reports/coffee.md` (split counts, sample grids, duplicates removed).
 - [ ] Implement baseline training script (`ml/src/train.py` + Colab notebook) using `MobileNetV3-Large` (`ImageNet` weights, frozen backbone only, class weights, standard augmentations) and log test metrics + confusion matrix in `docs/EXPERIMENTS.md`.
 
@@ -120,14 +122,15 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 ---
 
 ## Phase 6: API, Auth & Sync
-**Milestone:** `v1.0.0 — Cloud Sync, Gemini RAG & Release` (`#32`–`#34`)
+**Milestone:** `v0.4.0 — Accounts & Sync` (`#32`–`#34`, `#46`–`#48`)
 
 ### Tasks
-- [ ] Implement FastAPI application structure in `api/` (`GET /health`, Pydantic v2 schemas, `slowapi` rate limiting, structured error handling, CORS) and deployable Firestore security rules (`firestore.rules`) denying all direct client reads/writes.
-- [ ] Implement Firebase ID token verification dependency via `firebase-admin` (required on every endpoint except `GET /health`) and Firestore repository layer (`users`, `farms`, `plots`, `scans` collections, every document tagged and filtered by `ownerUid`).
-- [ ] Implement `CRUD /farms`, `CRUD /plots`, idempotent batch `POST /scans/sync` (by client UUID), `GET /scans`, and signed Cloudinary upload parameter generation (`max 1280 px`, scoped to `users/{uid}/scans`).
-- [ ] Write comprehensive `pytest + httpx` tests in `api/tests/`, including the multi-tenant isolation test proving User A cannot read, modify, or delete User B's farms, plots, or scans.
-- [ ] Integrate Firebase Auth (email/password sign-up, sign-in, sign-out) and background/manual sync in `app/` using TanStack Query + `expo-sqlite` sync state (`sync pulse -> checkmark morph`), keeping offline diagnosis fully functional without an account.
+- [ ] Implement FastAPI application structure in `api/` (`GET /health`, Pydantic v2 schemas, structured error handling, CORS) and deployable Firestore security rules (`firestore.rules`) denying all direct client reads/writes (`#32`).
+- [ ] Implement Firebase ID token verification dependency via `firebase-admin` and `CRUD /farms` + `CRUD /plots` with `ownerUid` multi-tenant isolation and User A vs. User B test (`#33`).
+- [ ] Implement idempotent batch `POST /scans/sync` (by client UUID), `GET /scans`, and signed Cloudinary upload parameter generation (`max 1280 px`, scoped to `users/{uid}/scans`) (`#46`).
+- [ ] Integrate Firebase Auth (email/password sign-up, sign-in, sign-out) and token injection in `app/`, keeping offline diagnosis unrestricted without an account (`#34`).
+- [ ] Implement the Android SQLite sync engine (`app/src/services/sync.ts`), Cloudinary client upload (`<= 1280 px`), and `sync pulse -> checkmark morph` status indicator (`#47`).
+- [ ] Verify end-to-end multi-tenant sync contract and Render deployment configuration (`#48`).
 
 ### Done when
 - All `api/` endpoints pass `pytest + httpx`, `ruff`, and `mypy`, including the User A vs. User B isolation test and idempotent re-sync test.
@@ -136,13 +139,14 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 ---
 
 ## Phase 7: Gemini RAG Explanations
-**Milestone:** `v1.0.0 — Cloud Sync, Gemini RAG & Release` (`#35`–`#37`)
+**Milestone:** `v0.5.0 — AI Explanations (Gemini RAG)` (`#35`–`#37`, `#49`–`#50`)
 
 ### Tasks
-- [ ] Implement `api/scripts/build_rag_index.py` to fetch public technical documents per crop (ICAFE for coffee; official public agricultural institutions for cacao and banana), chunk with section metadata, and build a local vector/embedding index at build time without committing restricted source PDFs.
-- [ ] Implement `POST /explanations` in `api/` using `google-genai` (`GEMINI_MODEL` env var, free-tier Flash model): retrieve relevant sections for `(crop, class, severity)`, generate plain-Spanish (or English per request locale) explanation + actionable next steps citing source and section, and explicitly decline when a topic is not covered by the retrieved documents.
-- [ ] Enforce strict privacy, caching, and rate limiting on `POST /explanations`: strip/forbid user names, emails, or GPS coordinates in prompts; cache responses by `(crop, class, severity, language)`; enforce `20 requests/user/hour` via `slowapi`.
-- [ ] Connect the app's Result and Scan Detail screens to display cached or freshly fetched RAG explanations with cited sources when online, and graceful offline fallback when disconnected.
+- [ ] Implement `api/scripts/fetch_agronomic_docs.py` and section chunker over official technical documents per crop (ICAFE for coffee; official public agricultural institutions for cacao and banana) without committing restricted PDFs (`#35`).
+- [ ] Implement `api/scripts/build_rag_index.py` and the local top-k retriever preserving `(source, section)` citation metadata (`#49`).
+- [ ] Implement `POST /explanations` in `api/` using `google-genai` (`GEMINI_MODEL` env var, free-tier Flash model) to generate plain-Spanish/English explanations + next steps citing source and section, and explicitly declining when not covered (`#36`).
+- [ ] Enforce strict privacy (never sending names, emails, or coordinates), response caching by `(crop, class, severity, language)`, and `20 requests/user/hour` rate limiting via `slowapi` (`#50`).
+- [ ] Connect the app's Result and Scan Detail screens to display cached or freshly fetched RAG explanations with cited sources when online, and graceful offline fallback when disconnected (`#37`).
 
 ### Done when
 - `POST /explanations` returns grounded explanations citing specific document titles and sections, declines out-of-scope queries in automated tests, never transmits PII/coordinates, caches by `(crop, class, severity, language)`, and enforces the `20/hour` per-user limit.
@@ -151,13 +155,14 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 ---
 
 ## Phase 8: Testing, Field Validation & v1.0.0
-**Milestone:** `v1.0.0 — Cloud Sync, Gemini RAG & Release` (`#38`–`#39`)
+**Milestone:** `v1.0.0 — Field Validation & Release` (`#38`–`#39`, `#51`–`#53`)
 
 ### Tasks
-- [ ] Execute the Costa Rican field validation protocol across coffee, cacao, and banana photos and record the full results table, lighting/angle breakdown, and failure analysis in `docs/FIELD_VALIDATION.md`.
-- [ ] Finalize `README.md` with real metrics tables, confusion matrices, Grad-CAM samples, app screenshots/demo GIF, and Render deployment verification.
-- [ ] Run full end-to-end regression across `app/`, `api/`, and `ml/`; verify coverage and accessibility (WCAG AA contrast, `>= 48 dp` touch targets, TalkBack labels, reduced motion).
-- [ ] Tag `v1.0.0`, trigger `.github/workflows/release.yml`, and publish the GitHub Release containing `CHANGELOG.md` notes, the installable Android `.apk`, and the three `.tflite` models + `registry.json` files.
+- [ ] Execute the Costa Rican field validation protocol across coffee, cacao, and banana photos in airplane mode and record empirical measurements in `docs/FIELD_VALIDATION.md` (`#38`).
+- [ ] Analyze field validation agreement rates, confidence threshold calibration, and lighting/angle failure modes in `docs/FIELD_VALIDATION.md` (`#51`).
+- [ ] Complete end-to-end WCAG AA contrast, `>= 48 dp` touch target, TalkBack label, and reduced-motion accessibility audit across all app screens (`#52`).
+- [ ] Finalize `README.md` and `docs/MODEL_CARD.md` with empirical metrics tables, confusion matrices, Grad-CAM samples, and Android screenshots/demo GIF (`#53`).
+- [ ] Tag `v1.0.0`, trigger `.github/workflows/release.yml`, and publish the GitHub Release containing `CHANGELOG.md` notes, the installable Android `.apk`, and the three `.tflite` models + `registry.json` files (`#39`).
 
 ### Done when
 - `ci.yml` is green across all suites, `docs/FIELD_VALIDATION.md` and `README.md` are complete with real evaluation artifacts, and GitHub Release `v1.0.0` is live with the signed/installable APK and `.tflite` models attached.
@@ -166,11 +171,11 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 
 ## Post-MVP Roadmap (Epics)
 
-### Milestone `v1.1.0 — Maps, Hotspots & Weather Alerts` (`#40`–`#42`, due `2026-12-28`)
+### Milestone `v1.1.0 — Maps, Hotspots & Weather Alerts` (`#40`–`#42`, due `2027-01-08`)
 - [ ] **Google Sign-In Integration (`#40`)**: Add native Google OAuth sign-in alongside email/password in Firebase Auth and the Android client.
 - [ ] **OpenStreetMap Plot Map with Disease Hotspots (`#41`)**: Interactive offline-capable plot boundary and scan hotspot visualization using OpenStreetMap tiles.
 - [ ] **Open-Meteo Weather Risk Alerts (`#42`)**: Conservative, rule-based microclimate disease risk estimates using Open-Meteo historical/forecast humidity, temperature, and precipitation data (with non-commercial `CC BY 4.0` attribution and clear estimation disclaimers).
 
-### Milestone `v1.2.0 — Earth Engine NDVI & Crop Expansion` (`#43`–`#44`, due `2027-01-15`)
+### Milestone `v1.2.0 — Earth Engine NDVI & Crop Expansion` (`#43`–`#44`, due `2027-01-25`)
 - [ ] **Earth Engine Sentinel-2 NDVI per Plot (`#43`)**: Monthly cloud-masked Sentinel-2 NDVI time series per plot via Google Earth Engine noncommercial Community tier in `api/` (service-account credentials strictly outside Git).
 - [ ] **Additional Costa Rican Crops (`#44`)**: Expand the `ml/` pipeline and `app/` model registry to support additional regional crops.

@@ -53,8 +53,6 @@ mypy_path = "src"
 [[tool.mypy.overrides]]
 module = [
     "imagehash.*",
-    "matplotlib.*",
-    "sklearn.*",
 ]
 ignore_missing_imports = true
 
