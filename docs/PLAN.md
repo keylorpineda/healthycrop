@@ -60,8 +60,8 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 **Milestone:** `v0.1.0 — Foundation & Coffee ML` (`#17`–`#19`)
 
 ### Tasks
-- [ ] Fine-tune top layers of `MobileNetV3-Large` on the coffee dataset at a lower learning rate after head warm-up, with early stopping on validation macro-F1; log runs in `docs/EXPERIMENTS.md` (target test macro-F1 >= `0.80`, or document experiments and root causes).
-- [ ] Generate Grad-CAM visual explanations per coffee class for `README.md` and `docs/MODEL_CARD.md`.
+- [x] Fine-tune top layers of `MobileNetV3-Large` on the coffee dataset at a lower learning rate after head warm-up, with early stopping on validation macro-F1; log runs in `docs/EXPERIMENTS.md` (target test macro-F1 >= `0.80`, or document experiments and root causes).
+- [x] Generate Grad-CAM visual explanations per coffee class for `README.md` and `docs/MODEL_CARD.md`.
 - [ ] Export the best coffee model to float16 TFLite (`< 10 MB`) via `ml/src/export_tflite.py` and verify TFLite test accuracy is within `1 pp` of the Keras model.
 - [ ] Calibrate the validation confidence threshold and write `ml/models/coffee/registry.json` (model filename, version, ordered labels, input size `224x224`, normalization parameters, confidence threshold).
 - [ ] Create a deterministic shared fixture test (`ml/tests/test_preprocessing_fixture.py` + shared fixture asset) exporting reference RGB bytes and normalized tensor values so the React Native app can prove identical preprocessing.
