@@ -64,7 +64,7 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ---
 
-## Phase 2 — Coffee Model & Export (In Progress, 2026-10-16)
+## Phase 2 — Coffee Model & Export (Completed, 2026-10-16)
 
 ### Built
 - **Top-Block Fine-Tuning, Logit Calibration & Grad-CAM Visual Explanations (`#17`)**:
@@ -73,14 +73,17 @@ This log documents what was built, key architectural decisions, and technical pr
   - Improved coffee test accuracy from `79.72%` to **`82.75%`** (`0.8701` mean F1 across the 4 major classes covering `89.7%` of the test set; `83.57%` validation accuracy / `0.7911` validation Macro-F1 and `0.7290`–`0.7463` 6-class test Macro-F1 after long-tail calibration), and saved [`docs/assets/confusion_matrices/coffee_finetuned.png`](assets/confusion_matrices/coffee_finetuned.png) and [`docs/assets/gradcam/coffee_gradcam.png`](assets/gradcam/coffee_gradcam.png).
 - **GitFlow Branching Structure (`develop` + `main`)**:
   - Configured `develop` as the default protected integration branch (receiving rebase-merged `--rebase` work PRs) and `main` as the protected release branch (receiving merge-commit `--merge` release PRs `chore(release): vX.Y.Z` from `develop`).
-
-
 - **Float16 TFLite Export, Confidence Threshold, Registry & Shared Fixture (`#18`)**:
   - Implemented [`ml/src/healthycrop_ml/export_tflite.py`](../ml/src/healthycrop_ml/export_tflite.py) and [`ml/scripts/export_coffee_tflite.py`](../ml/scripts/export_coffee_tflite.py): strips training-only `aug_*` and `head_dropout` layers, exports a batch-1 SavedModel, converts it to float16 TFLite, and evaluates it with the TFLite interpreter on all `426` validation and `429` test images.
   - Coffee model: `6,061,508` bytes, `81.12%` TFLite test accuracy vs `81.35%` Keras (`0.23 pp` drop, `99.77%` top-1 agreement).
   - Calibrated the abstention threshold on validation as the lowest top-1 probability reaching `>= 90%` accepted precision: `0.79` (`90.9%` precision at `69.5%` coverage on val; `87.7%` precision at `72.0%` coverage on test). Written to [`ml/models/coffee/registry.json`](../ml/models/coffee/registry.json) together with labels, input spec, normalization, model SHA-256, and metrics.
   - Generated [`ml/fixtures/preprocessing_fixture_224.json`](../ml/fixtures/preprocessing_fixture_224.json): seeded `224x224` RGB bytes, probe pixels, and the SHA-256 of the expected little-endian float32 tensor, verified by `ml/tests/test_preprocessing_fixture.py` (Jest side lands in Phase 4).
+- **Coffee Model Card (`#19`)**:
+  - Completed the coffee section of [`docs/MODEL_CARD.md`](MODEL_CARD.md): intended use, data provenance and split, Keras vs float16 TFLite metrics, per-class TFLite results with abstention coverage at `0.79`, Grad-CAM, and coffee-specific limitations (macro-F1 `0.72` vs `0.80` target, no Costa Rican training images, no severity output yet).
 
 ### Problems Solved
 - **Keras 3 Variables Not Frozen by Concrete-Function Conversion**:
   - `TFLiteConverter.from_concrete_functions` on a Keras 3 model produced a `226 KB` model that output `NaN` (weights stayed as unresolved resource variables). Exporting through `keras.export.ExportArchive` to a SavedModel and converting with `from_saved_model` froze all weights (`6.06 MB`) and matched Keras outputs.
+
+### Phase 2 Outcome
+- Done-when status: float16 `.tflite` `< 10 MB` and within `1 pp` ✅; registry and shared fixture committed and tested ✅; test macro-F1 `>= 0.80` not met, with root causes and ablations documented in `docs/EXPERIMENTS.md` (the accepted fallback).
