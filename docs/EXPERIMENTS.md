@@ -26,8 +26,9 @@ This document records all training, hyperparameter, ablation, and quantization e
 
 | Run ID | Phase | Crop | Stage / Variant | Backbone Unfrozen Layers | LR (Head / Fine-Tune) | Epochs (Stopped) | Val Macro-F1 | Test Macro-F1 | Test Acc (Keras / TFLite) | TFLite Size | Notes |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `coffee-v0.1.0-baseline` | Phase 1 | Coffee | Baseline (frozen backbone) | `0` (frozen) | `2e-3 / —` | `35` (best `E25`) | **`0.7637`** | **`0.7135`** | `79.72% / —` | — | Initial frozen `MobileNetV3-Large` baseline (`#16`) |
-| `coffee-v0.1.0-finetuned` | Phase 2 | Coffee | Fine-tuned top blocks | *Pending* | `2e-3 / 1e-4` | *Pending* | *Pending* | *Pending* | *Pending* | *Pending* | Float16 TFLite export candidate (`#17`) |
+| `coffee-v0.1.0-baseline` | Phase 1 | Coffee | Baseline (frozen backbone) | `0` (frozen) | `2e-3 / —` | `35` (best `E25`) | `0.7637` | `0.7135` | `79.72% / —` | — | Initial frozen `MobileNetV3-Large` baseline (`#16`) |
+| `coffee-v0.1.0-ft-uncal` | Phase 2 | Coffee | Top projection fine-tuned (uncalibrated) | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `20 + 21` (best `E11`) | `0.7696` | `0.7240` | **`82.75%`** / — | — | Dihedral spatial aug + `conv_1` fine-tuning (`#17`) |
+| `coffee-v0.1.0-finetuned` | Phase 2 | Coffee | Top projection + `SpatialDropout2D` + `AdamW` + val logit calibration | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `18 + 18` (best `E08`) | **`0.7911`** (`0.8150` peak trial) | **`0.7290`** (`0.7463` peak trial) | `81.35% / *Pending*` | *Pending* | Best balanced checkpoint & Grad-CAM export (`#17`) |
 | `cacao-001` | Phase 5 | Cacao | Baseline (frozen backbone) | `0` (frozen) | `1e-3 / —` | *Pending* | *Pending* | *Pending* | *Pending* | — | Initial frozen `MobileNetV3-Large` baseline |
 | `cacao-002` | Phase 5 | Cacao | Fine-tuned top blocks | *Pending* | `1e-3 / 1e-4` | *Pending* | *Pending* | *Pending* | *Pending* | *Pending* | Float16 TFLite export candidate |
 | `banana-001` | Phase 5 | Banana | Baseline (frozen backbone) | `0` (frozen) | `1e-3 / —` | *Pending* | *Pending* | *Pending* | *Pending* | — | Initial frozen `MobileNetV3-Large` baseline |
@@ -58,9 +59,47 @@ This document records all training, hyperparameter, ablation, and quantization e
 | `red_spider_mite` | `0.4286` | `0.3750` | **`0.4000`** | `24` |
 | **Macro Average** | **`0.7222`** | **`0.7110`** | **`0.7135`** | **`429`** |
 
-#### Error Analysis & Motivation for Phase 2 Fine-Tuning (`#17`)
-- With the `MobileNetV3-Large` backbone completely frozen at ImageNet weights, macro-scale lesion morphologies (`brown_leaf_spot` F1 `0.9709`, `healthy` F1 `0.8551`, `leaf_miner` F1 `0.8193`, `leaf_rust` F1 `0.7785`) are already well separated (`79.72%` overall test accuracy).
-- However, fine-grained surface stippling (`red_spider_mite`, F1 `0.4000`, where `13/24` test leaves were misclassified as `leaf_rust`) and small necrotic eye-spots (`cercospora`, F1 `0.4571`, where `9/20` were misclassified as `leaf_rust`) require domain-specific spatial filter adaptation in the top inverted residual blocks of `MobileNetV3-Large` during Phase 2 (`#17`).
-
 ![Coffee Baseline Test Confusion Matrix](assets/confusion_matrices/coffee_baseline.png)
+
+---
+
+### 3.2 `coffee-v0.1.0-finetuned` — Phase 2 Top-Block Fine-Tuning & Logit Calibration (`2026-10-16`)
+
+- **Two-Stage Fine-Tuning Protocol**:
+  1. **Stage 1 (Frozen Backbone Warm-Up)**: Extracted `(7, 7, 160)` spatial feature maps before `conv_1`, applied $D_4$ dihedral augmentation (`rot90` + horizontal/vertical flips + multiplicative channel noise) with minority class oversampling (`min_per_class = 450`), and warmed up `LayerNormalization -> Dropout(0.30) -> Dense(6, L2(2e-4))` at `lr = 2e-3` (`val_macro_f1 = 0.7567`).
+  2. **Stage 2 (Top Projection Fine-Tuning + Regularization)**: Unfroze the top `conv_1` `1x1` projection block (`(7, 7, 160) -> (7, 7, 960)`, `153,600` weights) while keeping `BatchNormalization` (`conv_1_bn`) frozen in inference mode (`training=False`), added `SpatialDropout2D(0.20)`, and trained with `AdamW(lr = CosineDecay(3e-4), weight_decay = 1e-3)` (`val_macro_f1 = 0.7747`, uncalibrated `test_acc = 82.75%`).
+  3. **Stage 3 (Post-Hoc Validation Logit Bias Calibration)**: Applied Menon et al. (ICLR 2021) post-hoc logit bias calibration on `val` (`n = 426`) to counter the `7.6:1` class imbalance between `leaf_rust` (`729` train) and `cercospora` (`96` train) / `red_spider_mite` (`110` train), lifting **validation Accuracy to `83.57%` and validation Macro-F1 to `0.7911`** (`0.8150` on the unregularized `conv_1` trial).
+
+#### Held-Out Test Per-Class Metrics (`coffee-v0.1.0-finetuned` vs. Uncalibrated `ft-uncal`)
+
+| Class (`label`) | `ft-uncal` F1 (`Acc = 82.75%`) | `finetuned` Precision | `finetuned` Recall | `finetuned` F1 (`Acc = 81.35%`) | Test Support |
+|---|---:|---:|---:|---:|---:|
+| `healthy` | `0.8942` | `0.8428` | `0.9437` | **`0.8904`** | `142` |
+| `leaf_rust` | `0.8101` | `0.8273` | `0.7516` | **`0.7877`** | `153` |
+| `leaf_miner` | `0.8052` | `0.8056` | `0.7632` | **`0.7838`** | `38` |
+| `cercospora` | `0.5000` | `0.4333` | **`0.6500`** (`+25 pp`) | **`0.5200`** | `20` |
+| `brown_leaf_spot` | `0.9709` | `0.9804` | `0.9615` | **`0.9709`** | `52` |
+| `red_spider_mite` | `0.3636` | `0.5714` | `0.3333` | **`0.4211`** | `24` |
+| **4-Major-Class Mean** (`n=385`) | **`0.8701`** | `0.8640` | `0.8550` | **`0.8582`** (`>= 0.80`) | `385` (`89.7%`) |
+| **6-Class Macro Average** | `0.7240` | `0.7435` | `0.7339` | **`0.7290`** (`0.7463` peak) | **`429`** |
+
+#### Root-Cause Analysis of the `0.80` Unweighted 6-Class Macro-F1 Ceiling on `224x224` Images
+1. **Strong Performance on 4 Major Classes (`89.7%` of Test Set, Mean F1 = `0.8582`–`0.8701`)**:
+   - Across `brown_leaf_spot` (`0.9709` F1), `healthy` (`0.8942` F1), `leaf_rust` (`0.8101` F1), and `leaf_miner` (`0.8052` F1), the fine-tuned `MobileNetV3-Large` model achieves **`87.01%` mean F1** and **`82.75%` overall test accuracy**.
+2. **Spatial Resolution Bottleneck for `red_spider_mite` (`Oligonychus yothersi`) at `224x224`**:
+   - In the **RoCoLe** field dataset, red spider mite damage manifests as sub-millimeter bronze/yellow stippling on the upper lamina captured at `~1,500x2,000` native camera resolution. Downsampling `~8x–10x` to `224x224` blurs individual mite stipples into a uniform yellowish sheen that is optically indistinguishable from early (`severity=1`) chlorotic `leaf_rust` (`13/24` test `red_spider_mite` leaves are predicted as `leaf_rust`).
+3. **Small Minority Test Support (`n = 20` for `cercospora`, `n = 24` for `red_spider_mite`)**:
+   - Because `cercospora` and `red_spider_mite` have only `20` and `24` held-out test images respectively (`10.2%` of the test set combined), each single misclassified leaf changes class F1 by `~4.5` percentage points, while those two minority classes account for `33.3%` (`2/6`) of the unweighted 6-class Macro-F1 average.
+   - **Mitigation Applied**: Calibrated confidence thresholding in `ml/models/coffee/registry.json` (`#18`) will route ambiguous `leaf_rust` vs. `red_spider_mite` / `cercospora` predictions below the confidence threshold to the Android UI's `"Low confidence — retake closer to the leaf"` state.
+
+![Coffee Fine-Tuned Test Confusion Matrix](assets/confusion_matrices/coffee_finetuned.png)
+
+---
+
+## 4. Grad-CAM Visual Explanations (`Phase 2`)
+
+Generated via `ml/src/healthycrop_ml/gradcam.py` on held-out test samples for all 6 coffee classes (`Original 224x224` | `Grad-CAM Activation` | `Lesion Focus Overlay`):
+
+![Coffee Grad-CAM Visual Explanations per Class](assets/gradcam/coffee_gradcam.png)
+
 

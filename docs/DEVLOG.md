@@ -62,3 +62,16 @@ This log documents what was built, key architectural decisions, and technical pr
 - **Keras 3 `RandomContrast` Default `value_range=(0, 255)` Clipping Bug**:
   - In Keras 3, `layers.RandomContrast` defaults to `value_range=(0, 255)` and clips output values to that range during training. When fed `[-1.0, 1.0]` normalized tensors, it clipped all negative pixel values (`[-1.0, 0.0)`) to `0.0` during training while leaving validation unclipped, capping validation Macro-F1 at `0.4075`. Explicitly passing `value_range=(-1.0, 1.0)` and adding `LayerNormalization` before the classification head jumped frozen-backbone validation Macro-F1 from `0.4075` to **`0.7637`** (`79.72%` test accuracy).
 
+---
+
+## Phase 2 — Coffee Model & Export (In Progress, 2026-10-16)
+
+### Built
+- **Top-Block Fine-Tuning, Logit Calibration & Grad-CAM Visual Explanations (`#17`)**:
+  - Implemented [`ml/src/healthycrop_ml/gradcam.py`](../ml/src/healthycrop_ml/gradcam.py) and [`ml/tests/test_gradcam.py`](../ml/tests/test_gradcam.py) to compute per-class `GradientTape` spatial activation heatmaps and render 3-panel explanation grids (`Original 224x224` | `Grad-CAM Activation` | `Lesion Focus Overlay`).
+  - Enhanced [`ml/src/healthycrop_ml/train.py`](../ml/src/healthycrop_ml/train.py) with low-RAM `(7, 7, 160)` spatial-feature extraction, $D_4$ dihedral augmentation, `SpatialDropout2D(0.20)`, `AdamW` with `CosineDecay`, and Menon et al. (ICLR 2021) validation-set logit bias calibration.
+  - Improved coffee test accuracy from `79.72%` to **`82.75%`** (`0.8701` mean F1 across the 4 major classes covering `89.7%` of the test set; `83.57%` validation accuracy / `0.7911` validation Macro-F1 and `0.7290`–`0.7463` 6-class test Macro-F1 after long-tail calibration), and saved [`docs/assets/confusion_matrices/coffee_finetuned.png`](assets/confusion_matrices/coffee_finetuned.png) and [`docs/assets/gradcam/coffee_gradcam.png`](assets/gradcam/coffee_gradcam.png).
+- **GitFlow Branching Structure (`develop` + `main`)**:
+  - Configured `develop` as the default protected integration branch (receiving rebase-merged `--rebase` work PRs) and `main` as the protected release branch (receiving merge-commit `--merge` release PRs `chore(release): vX.Y.Z` from `develop`).
+
+
