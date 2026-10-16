@@ -12,5 +12,10 @@ export default function IndexScreen(): React.JSX.Element {
     return <OnboardingScreen />;
   }
 
-  return <HomeScreen onOpenSettings={() => router.push('/settings')} />;
+  return (
+    <HomeScreen
+      onOpenSettings={() => router.push('/settings')}
+      onScan={(crop) => router.push({ pathname: '/scan', params: { crop } })}
+    />
+  );
 }

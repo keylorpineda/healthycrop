@@ -133,6 +133,14 @@ This log documents what was built, key architectural decisions, and technical pr
     - `inference.ts`: Numerically stable `softmax`, `evaluatePrediction` assessing probabilities against the `0.79` calibrated confidence threshold, disease severity mapping, and high-level `runInference` pipeline.
   - Authored cross-platform preprocessing parity test (`app/src/ml/__tests__/parity.test.ts`) loading the Phase 2 Python fixture and verifying exact tensor parity across 35 coordinate canvas probes and overall tensor summary statistics (min `-1.0`, max `1.0`, sum `-447.15`) within float32 tolerance (`1e-5`).
   - Authored unit test suite (`app/src/ml/__tests__/inference.test.ts`) verifying softmax stability, threshold abstention, disease severity mapping, and mock runner execution.
+- **Camera Screen, Photo Tips, Analyzing Animation & Result Screen (`#25`)**:
+  - Installed and pinned `expo-camera@~16.0.18` and `expo-image-picker@~16.0.6`, documented in `docs/ARCHITECTURE.md` §6.
+  - Built `PhotoTipsSheet` (`app/src/components/camera/PhotoTipsSheet.tsx`) providing crop-specific guidance (coffee undersides for rust/miner, whole cacao pods for monilia/black pod, leaf striations for banana sigatoka).
+  - Built `CameraScreen` (`app/src/screens/CameraScreen.tsx`) with real-time viewfinder, pulsing framing guide, shutter flash effect, tactile haptic feedback (`expo-haptics`), and gallery image picker.
+  - Built `AnalyzingOverlay` (`app/src/components/camera/AnalyzingOverlay.tsx`) with continuous sweep scan-line animation, reduced-motion accessibility support, and 100% offline indicator badge.
+  - Built `ResultScreen` (`app/src/screens/ResultScreen.tsx`) displaying the hero photo, severity-colored `ProgressMeter`, pop-in diagnosis status badge (`healthy`, `watch`, `actNow`), tactile haptic feedback (Success/Warning/Error), low-confidence retake guidance (`"Confianza baja — repita la captura"`), probability breakdown by class, recommended next steps, and non-replacement agronomic disclaimer.
+  - Implemented `/scan` route (`app/src/app/scan.tsx`) integrating Camera -> Analyzing -> Result pipeline with fallback error handling, connected to `HomeScreen`'s primary Scan CTA.
+  - Authored comprehensive Jest + RNTL unit and integration test suite (`app/src/screens/__tests__/camera_result.test.tsx`), verifying all user interactions and Spanish/English copy parity.
 
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:

@@ -74,6 +74,58 @@
     "offlinePill": "100% Fuera de línea",
     "syncPill": "Almacenamiento local"
   },
+  "camera": {
+    "tipsTitle": "Consejos de captura",
+    "tipsUnderstood": "Entendido, tomar foto",
+    "shutter": "Capturar foto",
+    "gallery": "Elegir de galería",
+    "permissionTitle": "Permiso de cámara requerido",
+    "permissionMessage": "HealthyCrop necesita acceso a la cámara para diagnosticar sus plantas directamente en campo.",
+    "grantPermission": "Conceder permiso",
+    "framingHint": "Encuadre la hoja dentro del marco guía"
+  },
+  "photoTips": {
+    "coffee": {
+      "title": "Consejos para Café",
+      "tip1": "Enfoca el envés de la hoja (lado inferior) donde aparecen las pústulas de roya y minador.",
+      "tip2": "Evita reflejos directos de sol; usa la sombra de tu cuerpo si es necesario.",
+      "tip3": "Mantén la hoja a unos 15–20 cm de la cámara, bien enfocada y sin movimiento."
+    },
+    "cacao": {
+      "title": "Consejos para Cacao",
+      "tip1": "Fotografía la mazorca completa o la mancha visible de monilia o mazorca negra.",
+      "tip2": "Asegúrate de que la mazorca ocupe la mayor parte del encuadre.",
+      "tip3": "Limpia la lente del teléfono para evitar empañamiento por humedad tropical."
+    },
+    "banana": {
+      "title": "Consejos para Banano",
+      "tip1": "Captura las estrías y manchas a lo largo de las nervaduras de la hoja.",
+      "tip2": "Encuadra la transición entre tejido sano y tejido afectado por sigatoka.",
+      "tip3": "Sostén la hoja firmemente contra el viento antes de disparar."
+    }
+  },
+  "analyzing": {
+    "title": "Analizando cultivo...",
+    "subtitle": "Ejecutando modelo de red neuronal en el dispositivo...",
+    "offline": "Procesamiento 100% local sin internet"
+  },
+  "result": {
+    "title": "Resultado del diagnóstico",
+    "confidence": "Nivel de confianza",
+    "statusHealthy": "Cultivo sano",
+    "statusWatch": "En observación",
+    "statusActNow": "Acción fitosanitaria requerida",
+    "lowConfidenceTitle": "Confianza baja — repita la captura",
+    "lowConfidenceAdvice": "La imagen no tiene suficiente nitidez o el encuadre no permite una clasificación confiable. Tome otra foto más cerca de la hoja y con buena iluminación.",
+    "retake": "Tomar otra foto",
+    "save": "Guardar en historial",
+    "done": "Finalizar",
+    "nextSteps": "Próximos pasos recomendados",
+    "probabilities": "Distribución de probabilidades",
+    "adviceHealthy": "Mantenga las prácticas culturales habituales y continúe el monitoreo periódico del lote.",
+    "adviceWatch": "Aumente la frecuencia de inspección y evalúe la dispersión de síntomas en plantas vecinas.",
+    "adviceActNow": "Consulte inmediatamente las recomendaciones oficiales de su servicio de extensión o un agrónomo certificado antes de aplicar tratamientos."
+  },
   "settings": {
     "title": "Ajustes",
     "language": "Idioma",

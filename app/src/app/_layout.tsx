@@ -21,6 +21,7 @@ function NavigationStack(): React.JSX.Element {
         <Stack.Screen name="index" options={{ title: 'HealthyCrop' }} />
         <Stack.Screen name="settings" options={{ title: 'Settings' }} />
         <Stack.Screen name="onboarding" options={{ title: 'Onboarding' }} />
+        <Stack.Screen name="scan" options={{ title: 'Scan' }} />
       </Stack>
     </>
   );

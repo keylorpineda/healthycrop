@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Camera screen with viewfinder framing guide and shutter flash, crop-specific photo tips modal, analyzing sweep-line animation, and result screen with severity progress meter, confidence breakdown, pop-in status badge with haptics, low-confidence retake state, and agronomic disclaimer (`#25`).
 - On-device TFLite inference pipeline (`app/src/ml/`) with `expo-image-manipulator`, `jpeg-js` RGB decoding, training normalization, `react-native-fast-tflite`, threshold calibration, and Jest cross-platform tensor parity test (`#24`).
 - Onboarding (3-slide educational flow with mandatory agronomic disclaimer acceptance), Home (camera-first layout, primary Scan CTA, crop selector chips, offline status pill, and empty state), and Settings screens (instant `es`/`en` language switcher, light/dark theme toggle, model version, dataset licenses) (`#23`).
 - Reusable UI component library in `app/src/components/ui/` (`Button`, `Card`, `Chip`, `Badge`, `Sheet`, `Toast`, `Skeleton`, `EmptyState`, `ProgressMeter`) with spring micro-interactions, haptics, >= 48 dp touch targets, reduced motion support, and RNTL unit tests (`#22`).

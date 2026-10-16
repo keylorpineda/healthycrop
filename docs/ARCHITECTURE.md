@@ -136,6 +136,7 @@ To prevent train/serve skew between Python (`Pillow` / `TensorFlow`) and React N
 | **State Management** | Zustand | `zustand@^5.0.15` | Lightweight reactive store for preferences and app state |
 | **Internationalization** | i18next / react-i18next | `i18next@^24.2.3`, `react-i18next@^15.7.4` | Spanish (`es`) default, English (`en`) secondary |
 | **Testing** | Jest / Testing Library | `jest-expo@~52.0.6`, `@testing-library/react-native@^13.3.3` | Unit and component testing with native mocks |
+| **Camera & Capture** | `expo-camera`, `expo-image-picker` | `expo-camera@~16.0.18`, `expo-image-picker@~16.0.6` | Custom camera viewfinder with framing guide, shutter haptics, and gallery picker fallback |
 | **Image Manipulation** | `expo-image-manipulator` | `expo-image-manipulator@~13.0.6` | 224x224 RGB image resizing and cropping for on-device inference |
 | **Image Decoding** | `jpeg-js` | `jpeg-js@^0.4.4` | Raw RGB pixel decoding from compressed JPEG byte buffers |
 | **On-Device ML** | `react-native-fast-tflite` | `react-native-fast-tflite@1.6.1` | Zero-copy JSI Float32Array TFLite model execution |
