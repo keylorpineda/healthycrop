@@ -1,21 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Badge, Button, Card, Chip, EmptyState, Toast } from '@/components/ui';
+import { type Scan, scansRepository } from '@/db';
 import { useTheme } from '@/theme';
 import { type SupportedCrop } from '@/version';
 
 export interface HomeScreenProps {
   onOpenSettings?: () => void;
   onScan?: (crop: SupportedCrop) => void;
+  onOpenHistory?: () => void;
+  onOpenFarms?: () => void;
+  onOpenScanDetail?: (scanId: string) => void;
   testID?: string;
 }
 
 export function HomeScreen({
   onOpenSettings,
   onScan,
+  onOpenHistory,
+  onOpenFarms,
+  onOpenScanDetail,
   testID = 'home-screen',
 }: HomeScreenProps): React.JSX.Element {
   const { t } = useTranslation();
@@ -24,6 +31,16 @@ export function HomeScreen({
   const [selectedCrop, setSelectedCrop] = useState<SupportedCrop>('coffee');
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string>('');
+  const [recentScans, setRecentScans] = useState<Scan[]>([]);
+
+  useEffect(() => {
+    try {
+      const allScans = scansRepository.getAll();
+      setRecentScans(allScans.slice(0, 3));
+    } catch {
+      // Ignored if db not initialized yet in specific test contexts
+    }
+  }, []);
 
   const handleScanPress = () => {
     if (onScan) {
@@ -74,6 +91,32 @@ export function HomeScreen({
               size="sm"
               testID="home-offline-badge"
             />
+            {onOpenFarms && (
+              <Pressable
+                onPress={onOpenFarms}
+                accessibilityRole="button"
+                accessibilityLabel={t('farms.title')}
+                style={styles.settingsButton}
+                testID="home-farms-btn"
+              >
+                <Text style={[theme.typography.title3, { color: theme.colors.textPrimary }]}>
+                  🏡
+                </Text>
+              </Pressable>
+            )}
+            {onOpenHistory && (
+              <Pressable
+                onPress={onOpenHistory}
+                accessibilityRole="button"
+                accessibilityLabel={t('history.title')}
+                style={styles.settingsButton}
+                testID="home-history-btn"
+              >
+                <Text style={[theme.typography.title3, { color: theme.colors.textPrimary }]}>
+                  📋
+                </Text>
+              </Pressable>
+            )}
             <Pressable
               onPress={onOpenSettings}
               accessibilityRole="button"
@@ -159,7 +202,7 @@ export function HomeScreen({
           />
         </Card>
 
-        {/* Recent Scans Section with EmptyState */}
+        {/* Recent Scans Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text
@@ -168,18 +211,90 @@ export function HomeScreen({
             >
               {t('home.recentScans')}
             </Text>
-            <Badge label="0" variant="neutral" size="sm" />
+            <Badge
+              label={`${recentScans.length}`}
+              variant="neutral"
+              size="sm"
+              testID="home-recent-scans-count"
+            />
           </View>
 
-          <Card variant="outlined" style={styles.emptyStateCard}>
-            <EmptyState
-              title={t('home.noScansTitle')}
-              description={t('home.noScansDescription')}
-              actionLabel={t('home.scanAction')}
-              onAction={handleScanPress}
-              testID="home-empty-state"
-            />
-          </Card>
+          {recentScans.length === 0 ? (
+            <Card variant="outlined" style={styles.emptyStateCard}>
+              <EmptyState
+                title={t('home.noScansTitle')}
+                description={t('home.noScansDescription')}
+                actionLabel={t('home.scanAction')}
+                onAction={handleScanPress}
+                testID="home-empty-state"
+              />
+            </Card>
+          ) : (
+            <View>
+              {recentScans.map((scan) => {
+                const diseaseKey = `diseases.${scan.crop}.${scan.predicted_class}`;
+                const translated = t(diseaseKey);
+                const title = translated !== diseaseKey ? translated : scan.predicted_class;
+                return (
+                  <Card
+                    key={scan.id}
+                    variant="elevated"
+                    style={[styles.recentScanCard, { borderColor: theme.colors.borderSubtle }]}
+                    testID={`home-scan-card-${scan.id}`}
+                  >
+                    <Pressable
+                      onPress={() => onOpenScanDetail?.(scan.id)}
+                      style={{ flexDirection: 'row', alignItems: 'center' }}
+                      accessibilityRole="button"
+                      accessibilityLabel={title}
+                    >
+                      <View style={{ flex: 1 }}>
+                        <View
+                          style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}
+                        >
+                          <Badge label={t(`crops.${scan.crop}`)} variant={scan.crop} size="sm" />
+                          <View style={{ width: 6 }} />
+                          <Badge
+                            label={
+                              scan.severity === 'healthy'
+                                ? t('result.statusHealthy')
+                                : scan.severity === 'actNow'
+                                  ? t('result.statusActNow')
+                                  : t('result.statusWatch')
+                            }
+                            variant={scan.severity}
+                            size="sm"
+                          />
+                        </View>
+                        <Text
+                          style={[theme.typography.headline, { color: theme.colors.textPrimary }]}
+                          numberOfLines={1}
+                        >
+                          {title}
+                        </Text>
+                      </View>
+                      <Text style={[theme.typography.bodyBold, { color: theme.colors.primary }]}>
+                        {`${Math.round(scan.confidence * 100)}%`}
+                      </Text>
+                    </Pressable>
+                  </Card>
+                );
+              })}
+
+              {onOpenHistory && (
+                <View style={{ marginTop: 8 }}>
+                  <Button
+                    title={t('history.title')}
+                    onPress={onOpenHistory}
+                    variant="outline"
+                    size="md"
+                    fullWidth
+                    testID="home-view-history-btn"
+                  />
+                </View>
+              )}
+            </View>
+          )}
         </View>
 
         {/* Non-Replacement Agronomic Disclaimer */}
@@ -265,5 +380,9 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
+  },
+  recentScanCard: {
+    padding: 14,
+    marginBottom: 8,
   },
 });

@@ -16,6 +16,9 @@ export default function IndexScreen(): React.JSX.Element {
     <HomeScreen
       onOpenSettings={() => router.push('/settings')}
       onScan={(crop) => router.push({ pathname: '/scan', params: { crop } })}
+      onOpenHistory={() => router.push('/history')}
+      onOpenFarms={() => router.push('/farms')}
+      onOpenScanDetail={(id) => router.push({ pathname: '/scan-detail', params: { id } })}
     />
   );
 }

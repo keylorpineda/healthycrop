@@ -140,5 +140,5 @@ To prevent train/serve skew between Python (`Pillow` / `TensorFlow`) and React N
 | **Image Manipulation** | `expo-image-manipulator` | `expo-image-manipulator@~13.0.6` | 224x224 RGB image resizing and cropping for on-device inference |
 | **Image Decoding** | `jpeg-js` | `jpeg-js@^0.4.4` | Raw RGB pixel decoding from compressed JPEG byte buffers |
 | **On-Device ML** | `react-native-fast-tflite` | `react-native-fast-tflite@1.6.1` | Zero-copy JSI Float32Array TFLite model execution |
-| **Local Database** | `expo-sqlite` | Pinned in Phase 4 | Offline persistence for farms, plots, scans, and sync queue |
+| **Local Database** | `expo-sqlite`, `expo-crypto` | `expo-sqlite@~15.1.2`, `expo-crypto@~14.0.2` | Offline persistence for farms, plots, scans, and sync queue with client UUID v4 |
 | **Backend Framework** | `fastapi` + `pydantic` | `fastapi >=0.115`, `pydantic >=2.10` | Hosted on Render free tier (documenting ~30–50s cold starts) |
