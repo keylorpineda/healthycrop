@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Expo SDK 52 Android application setup (`app/app.json`, `app/package.json`) with package `com.keylorpineda.healthycrop`, New Architecture, and Expo Router (`#20`).
+- Internationalization subsystem (`app/src/i18n/`) with Spanish default, English secondary, symmetric translation keys, and mandatory agronomic disclaimer (`#20`).
+- Zustand preferences store (`app/src/stores/preferences.ts`) managing locale, light/dark/system theme, and onboarding state (`#20`).
+- Jest + React Native Testing Library configuration (`jest-expo`) with native module mocks and unit tests (`#20`).
+
 ## [0.1.0] - 2026-10-16
 
 ### Added

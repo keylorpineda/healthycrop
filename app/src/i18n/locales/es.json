@@ -1,0 +1,67 @@
+{
+  "common": {
+    "appName": "HealthyCrop",
+    "tagline": "Diagnóstico de cultivos fuera de línea",
+    "disclaimer": "HealthyCrop es una herramienta de apoyo a la toma de decisiones y no reemplaza el criterio de un agrónomo certificado. Antes de aplicar agroquímicos o tomar medidas fitosanitarias mayores, consulte con un profesional o el servicio de extensión agrícola de su región.",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "retry": "Reintentar",
+    "continue": "Continuar",
+    "loading": "Cargando...",
+    "analyzing": "Analizando hoja...",
+    "offlineNotice": "Modo fuera de línea activo"
+  },
+  "nav": {
+    "home": "Inicio",
+    "history": "Historial",
+    "farms": "Fincas",
+    "settings": "Ajustes"
+  },
+  "crops": {
+    "coffee": "Café",
+    "cacao": "Cacao",
+    "banana": "Banano"
+  },
+  "status": {
+    "healthy": "Sano",
+    "watch": "Observación",
+    "actNow": "Actuar ahora",
+    "lowConfidence": "Confianza baja — tome otra foto más cerca de la hoja"
+  },
+  "diseases": {
+    "coffee": {
+      "healthy": "Hoja sana",
+      "leaf_rust": "Roya del café (Hemileia vastatrix)",
+      "leaf_miner": "Minador de la hoja (Leucoptera coffeella)",
+      "cercospora": "Mancha de hierro / Cercospora (Cercospora coffeicola)",
+      "brown_leaf_spot": "Mancha parda / Phoma (Phoma / Ascochyta spp.)",
+      "red_spider_mite": "Ácaro rojo (Oligonychus yothersi)"
+    },
+    "cacao": {
+      "healthy": "Mazorca sana",
+      "monilia": "Moniliasis (Moniliophthora roreri)",
+      "black_pod": "Mazorca negra (Phytophthora palmivora)"
+    },
+    "banana": {
+      "healthy": "Hoja sana",
+      "black_sigatoka": "Sigatoka negra (Pseudocercospora fijiensis)",
+      "fusarium_wilt": "Marchitez por Fusarium (Fusarium oxysporum)"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "theme": "Tema de visualización",
+    "themeSystem": "Automático (sistema)",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "about": "Acerca de HealthyCrop",
+    "version": "Versión",
+    "credits": "Créditos y licencias de datos",
+    "author": "Autor"
+  }
+}
