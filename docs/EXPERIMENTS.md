@@ -29,8 +29,8 @@ This document records all training, hyperparameter, ablation, and quantization e
 | `coffee-v0.1.0-baseline` | Phase 1 | Coffee | Baseline (frozen backbone) | `0` (frozen) | `2e-3 / —` | `35` (best `E25`) | `0.7637` | `0.7135` | `79.72% / —` | — | Initial frozen `MobileNetV3-Large` baseline (`#16`) |
 | `coffee-v0.1.0-ft-uncal` | Phase 2 | Coffee | Top projection fine-tuned (uncalibrated) | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `20 + 21` (best `E11`) | `0.7696` | `0.7240` | **`82.75%`** / — | — | Dihedral spatial aug + `conv_1` fine-tuning (`#17`) |
 | `coffee-v0.1.0-finetuned` | Phase 2 | Coffee | Top projection + `SpatialDropout2D` + `AdamW` + val logit calibration | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `18 + 18` (best `E08`) | **`0.7911`** (`0.8150` peak trial) | **`0.7290`** (`0.7463` peak trial) | `81.35% / 81.12%` | `6.06 MB` | Best balanced checkpoint, Grad-CAM (`#17`), float16 export (`#18`) |
-| `cacao-001` | Phase 5 | Cacao | Baseline (frozen backbone) | `0` (frozen) | `1e-3 / —` | *Pending* | *Pending* | *Pending* | *Pending* | — | Initial frozen `MobileNetV3-Large` baseline |
-| `cacao-002` | Phase 5 | Cacao | Fine-tuned top blocks | *Pending* | `1e-3 / 1e-4` | *Pending* | *Pending* | *Pending* | *Pending* | *Pending* | Float16 TFLite export candidate |
+| `cacao-v0.1.0-baseline` | Phase 5 | Cacao | Baseline (frozen backbone + val logit calibration) | `0` (frozen) | `2e-3 / —` | `22` (best `E14`) | `0.7748` | `0.7946` | `87.47% / —` | — | Initial frozen `MobileNetV3-Large` cacao baseline (`#28`) |
+| `cacao-v0.1.0-finetuned` | Phase 5 | Cacao | Top-30 block fine-tuning + `SpatialDropout2D` + `AdamW` + val logit calibration | `30` (BN frozen) | `2e-3 / 2e-4` | `22 + 25` (best `E19`) | **`0.8233`** | **`0.8502`** (`>= 0.80`) | **`91.73%`** / *Pending `#70`* | *Pending `#70`* | Exceeds `0.80` Macro-F1 target, Grad-CAM (`#28`) |
 | `banana-001` | Phase 5 | Banana | Baseline (frozen backbone) | `0` (frozen) | `1e-3 / —` | *Pending* | *Pending* | *Pending* | *Pending* | — | Initial frozen `MobileNetV3-Large` baseline |
 | `banana-002` | Phase 5 | Banana | Fine-tuned top blocks | *Pending* | `1e-3 / 1e-4` | *Pending* | *Pending* | *Pending* | *Pending* | *Pending* | Float16 TFLite export candidate |
 
@@ -103,10 +103,65 @@ This document records all training, hyperparameter, ablation, and quantization e
 
 ---
 
-## 4. Grad-CAM Visual Explanations (`Phase 2`)
+### 3.4 `cacao-v0.1.0-baseline` — Phase 5 Frozen `MobileNetV3-Large` Baseline (`2026-10-16`, `#28`)
+
+- **Dataset Split**: `train = 1,843`, `val = 404`, `test = 399` across `1,367` distinct tree/photo `group_id`s (`seed = 42`, zero `group_id` overlap across splits) combining **CocoaMoniliaDataSet** (`h0`, `m1`–`m3`) and **UNAB Cocoa Diseases** (`Fitoftora` -> `black_pod`, `Monilia` -> `monilia`, `Sana` -> `healthy` YOLO bounding-box crops).
+- **Training Configuration**: Frozen `MobileNetV3-Large` backbone (`0` backbone layers unfrozen), $D_4$ dihedral spatial feature augmentation + minority oversampling, Adam (`lr = 2e-3`), `batch_size = 64`, `patience = 8` (early stopping at epoch `22`, best restored from epoch `14`), plus validation logit bias calibration.
+- **Overall Metrics**:
+  - **Validation (`n = 404`)**: Accuracy = **`86.39%`**, Macro-Precision = `0.7526`, Macro-Recall = `0.8232`, **Macro-F1 = `0.7748`**.
+  - **Held-Out Test (`n = 399`)**: Accuracy = **`87.47%`**, Macro-Precision = `0.7868`, Macro-Recall = `0.8030`, **Macro-F1 = `0.7946`**.
+
+#### Held-Out Test Per-Class Metrics (`cacao-v0.1.0-baseline`)
+
+| Class (`label`) | Precision | Recall | F1-Score | Test Support |
+|---|---:|---:|---:|---:|
+| `healthy` | `0.9359` | `0.9164` | **`0.9261`** | `287` |
+| `monilia` | `0.7471` | `0.7927` | **`0.7692`** | `82` |
+| `black_pod` | `0.6774` | `0.7000` | **`0.6885`** | `30` |
+| **Macro Average** | **`0.7868`** | **`0.8030`** | **`0.7946`** | **`399`** |
+
+![Cacao Baseline Test Confusion Matrix](assets/confusion_matrices/cacao_baseline.png)
+
+---
+
+### 3.5 `cacao-v0.1.0-finetuned` — Phase 5 Top-Block Fine-Tuning & Logit Calibration (`2026-10-16`, `#28`)
+
+- **Fine-Tuning Protocol**:
+  1. **Stage 1 (Frozen Head Warm-Up)**: `22` epochs at `lr = 2e-3` (`val_macro_f1 = 0.7607`).
+  2. **Stage 2 (Top-30 Backbone Fine-Tuning)**: Unfroze the top `30` layers (`expanded_conv_14_add` through `conv_1`, keeping `BatchNormalization` frozen in inference mode) with `SpatialDropout2D(0.20)` and `AdamW(lr = 2e-4, weight_decay = 1e-3)` for `25` epochs (`val_macro_f1 = 0.7917` uncalibrated).
+  3. **Stage 3 (Validation Logit Bias Calibration)**: Post-hoc validation logit adjustment lifted **validation Accuracy to `90.10%` and validation Macro-F1 to `0.8233`**.
+- **Held-Out Test Results (`n = 399`)**:
+  - **Test Accuracy**: **`91.73%`** (`+4.26 pp` over frozen baseline)
+  - **Test Macro-Precision**: **`0.8500`**
+  - **Test Macro-Recall**: **`0.8514`**
+  - **Test Macro-F1**: **`0.8502`** (`+5.56 pp` over frozen baseline, exceeding the `>= 0.80` target)
+
+#### Held-Out Test Per-Class Metrics (`cacao-v0.1.0-finetuned`)
+
+| Class (`label`) | Baseline F1 (`Acc = 87.47%`) | Fine-Tuned Precision | Fine-Tuned Recall | Fine-Tuned F1 (`Acc = 91.73%`) | Test Support |
+|---|---:|---:|---:|---:|---:|
+| `healthy` | `0.9261` | `0.9483` | `0.9582` | **`0.9532`** (`+2.71 pp`) | `287` |
+| `monilia` | `0.7692` | `0.8831` | `0.8293` | **`0.8553`** (`+8.61 pp`) | `82` |
+| `black_pod` | `0.6885` | `0.7188` | `0.7667` | **`0.7419`** (`+5.34 pp`) | `30` |
+| **3-Class Macro Average** | `0.7946` | **`0.8500`** | **`0.8514`** | **`0.8502`** (`>= 0.80`) | **`399`** |
+
+![Cacao Fine-Tuned Test Confusion Matrix](assets/confusion_matrices/cacao_finetuned.png)
+
+---
+
+## 4. Grad-CAM Visual Explanations (`Phases 2 & 5`)
+
+### 4.1 Coffee Leaf Disease Grad-CAM (`Phase 2`)
 
 Generated via `ml/src/healthycrop_ml/gradcam.py` on held-out test samples for all 6 coffee classes (`Original 224x224` | `Grad-CAM Activation` | `Lesion Focus Overlay`):
 
 ![Coffee Grad-CAM Visual Explanations per Class](assets/gradcam/coffee_gradcam.png)
+
+### 4.2 Cacao Pod Disease Grad-CAM (`Phase 5`, `#28`)
+
+Generated via `ml/src/healthycrop_ml/gradcam.py` on held-out test samples for all 3 cacao pod classes (`healthy`, `monilia`, `black_pod`), confirming that spatial activations localize onto the white mycelial sporulation / chocolate necrosis of *Moniliophthora roreri* (`monilia`) and the dark advancing water-soaked lesions of *Phytophthora* (`black_pod`) rather than background foliage:
+
+![Cacao Grad-CAM Visual Explanations per Class](assets/gradcam/cacao_gradcam.png)
+
 
 

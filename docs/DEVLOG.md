@@ -172,3 +172,7 @@ This log documents what was built, key architectural decisions, and technical pr
 - **Standardized Milestone Granularity & Release CI Fix**:
   - Standardized all 8 repository milestones (`v0.1.0` through `v1.2.0`) to 7–10 single-PR issues each without duplicate PR milestone counting.
   - Replaced `android-actions/setup-android@v3` in `.github/workflows/release.yml` so Command-Line Tools 16.0 no longer fails on the removed `tools` package.
+- **Cacao `MobileNetV3-Large` Baseline, Top-30 Fine-Tuning & Grad-CAMs (`#28`)**:
+  - Implemented `ml/scripts/train_cacao.py` and `ml/tests/test_train_cacao.py`.
+  - Trained frozen-backbone baseline `cacao-v0.1.0-baseline` (`87.47%` test accuracy, `0.7946` test Macro-F1) and top-30 fine-tuned model `cacao-v0.1.0-finetuned` (`91.73%` test accuracy, `0.8502` test Macro-F1, `0.9532` `healthy` F1, `0.8553` `monilia` F1, `0.7419` `black_pod` F1).
+  - Generated test confusion matrices (`docs/assets/confusion_matrices/cacao_baseline.png`, `cacao_finetuned.png`) and Grad-CAM visual explanations (`docs/assets/gradcam/cacao_gradcam.png`) and documented all runs in `docs/EXPERIMENTS.md`.

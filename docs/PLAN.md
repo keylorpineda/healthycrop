@@ -111,7 +111,7 @@ This document tracks the phased delivery of **HealthyCrop** (`com.keylorpineda.h
 
 ### Tasks
 - [x] Verify dataset licenses for **CocoaMoniliaDataSet** (Zenodo `10.5281/zenodo.17156051`) and **UNAB cocoa diseases** (Kaggle `serranosebas/enfermedades-cacao-yolov4`), implement `download_cocoamonilia.py`, `download_unab_cacao.py`, `ml/configs/cacao.yaml`, and `prepare_cacao.py` with YOLO pod cropping, pHash deduplication, and grouped `70/15/15` split (`seed=42`), and generate `docs/data_reports/cacao.md` (`#27`).
-- [ ] Train frozen baseline and fine-tuned `MobileNetV3-Large` models for cacao (`healthy`, `monilia`, `black_pod`) and generate confusion matrix and Grad-CAM visuals in `docs/EXPERIMENTS.md` (`#28`).
+- [x] Train frozen baseline and fine-tuned `MobileNetV3-Large` models for cacao (`healthy`, `monilia`, `black_pod`) and generate confusion matrix and Grad-CAM visuals in `docs/EXPERIMENTS.md` (`#28`).
 - [ ] Export float16 cacao TFLite model (`< 10 MB`, within `1 pp` of Keras accuracy), calibrate threshold, create `ml/models/cacao/registry.json`, and update `docs/MODEL_CARD.md` (`#70`).
 - [ ] Verify dataset licenses for **Banana Leaves Imagery** (NM-AIST DSpace `20.500.12479/3003` / DOI `10.1038/s41597-025-04456-4`) and **BananaLSD** (Mendeley `9tb7k297ff`), implement `download_banana_*.py`, `ml/configs/banana.yaml`, and `prepare_banana.py` with pHash deduplication and grouped `70/15/15` split (`seed=42`), and generate `docs/data_reports/banana.md` (`#29`).
 - [ ] Train frozen baseline and fine-tuned `MobileNetV3-Large` models for banana (`healthy`, `black_sigatoka`, `fusarium_wilt`) and generate confusion matrix and Grad-CAM visuals in `docs/EXPERIMENTS.md` (`#30`).
