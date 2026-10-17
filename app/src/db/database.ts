@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 
 import { SCHEMA_SQL } from './schema';
 
-export const DATABASE_NAME = 'healthycrop.db';
+export const DATABASE_NAME = 'healthycropping.db';
 
 let dbInstance: SQLite.SQLiteDatabase | null = null;
 

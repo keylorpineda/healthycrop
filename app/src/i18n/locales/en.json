@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "HealthyCrop",
+    "appName": "HealthyCropping",
     "tagline": "Offline crop diagnosis",
-    "disclaimer": "HealthyCrop is a decision-support tool and does not replace the judgment of a certified agronomist. Before applying agrochemicals or taking major phytosanitary actions, consult a qualified professional or your regional agricultural extension service.",
+    "disclaimer": "HealthyCropping is a decision-support tool and does not replace the judgment of a certified agronomist. Before applying agrochemicals or taking major phytosanitary actions, consult a qualified professional or your regional agricultural extension service.",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
@@ -62,7 +62,7 @@
     "slide2Title": "Calibrated & Accurate AI",
     "slide2Description": "Deep learning models running on-device with calibrated confidence thresholds and abstention coverage.",
     "slide3Title": "Agronomic Decision Support",
-    "slide3Description": "HealthyCrop supports your integrated management decisions but does not replace a certified agronomist."
+    "slide3Description": "HealthyCropping supports your integrated management decisions but does not replace a certified agronomist."
   },
   "home": {
     "selectCrop": "Select Crop to Diagnose",
@@ -80,7 +80,7 @@
     "shutter": "Capture photo",
     "gallery": "Pick from gallery",
     "permissionTitle": "Camera Permission Required",
-    "permissionMessage": "HealthyCrop needs camera access to diagnose your crops directly in the field.",
+    "permissionMessage": "HealthyCropping needs camera access to diagnose your crops directly in the field.",
     "grantPermission": "Grant Permission",
     "framingHint": "Frame the leaf inside the guide box"
   },
@@ -135,7 +135,7 @@
     "themeDark": "Dark",
     "accountSection": "Account & Sync",
     "accountPlaceholder": "Local mode active (no account required)",
-    "about": "About HealthyCrop",
+    "about": "About HealthyCropping",
     "version": "Version",
     "credits": "Data credits and licenses",
     "author": "Author",

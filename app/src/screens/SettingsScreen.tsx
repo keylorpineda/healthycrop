@@ -162,7 +162,7 @@ export function SettingsScreen({
           <Card variant="elevated" style={styles.card}>
             <View style={styles.itemRow}>
               <Text style={[theme.typography.title3, { color: theme.colors.primary }]}>
-                HealthyCrop
+                HealthyCropping
               </Text>
               <Badge label="v0.2.0-dev" variant="neutral" size="sm" />
             </View>

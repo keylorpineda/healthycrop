@@ -1,8 +1,8 @@
 {
   "common": {
-    "appName": "HealthyCrop",
+    "appName": "HealthyCropping",
     "tagline": "Diagnóstico de cultivos fuera de línea",
-    "disclaimer": "HealthyCrop es una herramienta de apoyo a la toma de decisiones y no reemplaza el criterio de un agrónomo certificado. Antes de aplicar agroquímicos o tomar medidas fitosanitarias mayores, consulte con un profesional o el servicio de extensión agrícola de su región.",
+    "disclaimer": "HealthyCropping es una herramienta de apoyo a la toma de decisiones y no reemplaza el criterio de un agrónomo certificado. Antes de aplicar agroquímicos o tomar medidas fitosanitarias mayores, consulte con un profesional o el servicio de extensión agrícola de su región.",
     "cancel": "Cancelar",
     "save": "Guardar",
     "delete": "Eliminar",
@@ -62,7 +62,7 @@
     "slide2Title": "Modelos precisos y calibrados",
     "slide2Description": "Modelos de aprendizaje profundo ejecutados localmente con evaluación de confianza y umbrales de abstención.",
     "slide3Title": "Herramienta de apoyo al productor",
-    "slide3Description": "HealthyCrop apoya sus decisiones de manejo integrado pero no reemplaza la inspección de un agrónomo certificado."
+    "slide3Description": "HealthyCropping apoya sus decisiones de manejo integrado pero no reemplaza la inspección de un agrónomo certificado."
   },
   "home": {
     "selectCrop": "Cultivo a diagnosticar",
@@ -80,7 +80,7 @@
     "shutter": "Capturar foto",
     "gallery": "Elegir de galería",
     "permissionTitle": "Permiso de cámara requerido",
-    "permissionMessage": "HealthyCrop necesita acceso a la cámara para diagnosticar sus plantas directamente en campo.",
+    "permissionMessage": "HealthyCropping necesita acceso a la cámara para diagnosticar sus plantas directamente en campo.",
     "grantPermission": "Conceder permiso",
     "framingHint": "Encuadre la hoja dentro del marco guía"
   },
@@ -135,7 +135,7 @@
     "themeDark": "Oscuro",
     "accountSection": "Cuenta y sincronización",
     "accountPlaceholder": "Modo local activo (no requiere cuenta)",
-    "about": "Acerca de HealthyCrop",
+    "about": "Acerca de HealthyCropping",
     "version": "Versión",
     "credits": "Créditos y licencias de datos",
     "author": "Autor",
