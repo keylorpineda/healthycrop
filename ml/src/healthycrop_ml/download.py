@@ -57,11 +57,34 @@ def compute_sha256(path: Path, chunk_size: int = 1024 * 1024) -> str:
     return hasher.hexdigest().lower()
 
 
-def verify_sha256(path: Path, expected_sha256: str) -> bool:
-    """Return True if `path` exists and its SHA-256 matches `expected_sha256`."""
+def compute_checksum(path: Path, expected: str, chunk_size: int = 1024 * 1024) -> tuple[str, str]:
+    """Compute digest and normalize expected string, supporting md5: prefix or default sha256."""
+    expected_clean = expected.strip().lower()
+    if expected_clean.startswith("md5:"):
+        hasher = hashlib.md5()
+        target = expected_clean.removeprefix("md5:")
+    else:
+        hasher = hashlib.sha256()
+        target = expected_clean
+    with path.open("rb") as fh:
+        while chunk := fh.read(chunk_size):
+            hasher.update(chunk)
+    return hasher.hexdigest().lower(), target
+
+
+def verify_checksum(path: Path, expected: str) -> bool:
+    """Return True if path exists and digest matches expected (sha256 or md5:...)."""
     if not path.is_file():
         return False
-    return compute_sha256(path) == expected_sha256.strip().lower()
+    if not expected:
+        return True
+    actual, target = compute_checksum(path, expected)
+    return actual == target
+
+
+def verify_sha256(path: Path, expected_sha256: str) -> bool:
+    """Return True if `path` exists and its SHA-256 (or md5 if prefixed) matches."""
+    return verify_checksum(path, expected_sha256)
 
 
 def verify_license_allowed(
@@ -162,20 +185,24 @@ def download_file_verified(
         follow_redirects=True,
     )
     try:
-        hasher = hashlib.sha256()
+        expected_clean = spec.sha256.strip().lower()
+        use_md5 = expected_clean.startswith("md5:")
+        target_hash = expected_clean.removeprefix("md5:") if use_md5 else expected_clean
+        hasher = hashlib.md5() if use_md5 else hashlib.sha256()
+
         with http.stream("GET", spec.url) as response:
             response.raise_for_status()
             with part_path.open("wb") as out_fh:
                 for chunk in response.iter_bytes(chunk_size=1024 * 256):
                     out_fh.write(chunk)
                     hasher.update(chunk)
-        actual_sha = hasher.hexdigest().lower()
-        expected_sha = spec.sha256.strip().lower()
-        if actual_sha != expected_sha:
+        actual_hash = hasher.hexdigest().lower()
+        if actual_hash != target_hash:
             part_path.unlink(missing_ok=True)
+            algo_name = "MD5" if use_md5 else "SHA-256"
             raise DatasetDownloadError(
-                f"SHA-256 mismatch for '{spec.filename}': "
-                f"expected {expected_sha}, got {actual_sha}."
+                f"{algo_name} mismatch for '{spec.filename}': "
+                f"expected {target_hash}, got {actual_hash}."
             )
         part_path.replace(dest_path)
         return dest_path

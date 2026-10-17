@@ -156,3 +156,47 @@ def test_validate_dataset_dir_and_manifest(tmp_path: Path) -> None:
         "RoCoLe", "https://doi.org/10.17632/c5yvn32dzg.2", tmp_path, ["Step 1"]
     )
     assert "Step 1" in instructions
+
+
+def test_cocoamonilia_dir_validation(tmp_path: Path) -> None:
+    import sys
+
+    scripts_dir = str(Path(__file__).resolve().parents[1] / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    import download_cocoamonilia
+
+    # Empty dir fails
+    res_empty = download_cocoamonilia.validate_cocoamonilia_dir(tmp_path)
+    assert not res_empty["valid"]
+
+    # Populated structure passes
+    base_dir = tmp_path / "CocoaMoniliaDataSet" / "cocoapods_images"
+    for c in ["h0", "m1", "m2", "m3"]:
+        cdir = base_dir / c
+        cdir.mkdir(parents=True, exist_ok=True)
+        (cdir / "pod1.jpg").write_bytes(b"dummy_img")
+
+    res_valid = download_cocoamonilia.validate_cocoamonilia_dir(tmp_path)
+    assert res_valid["valid"]
+    assert res_valid["total_images"] == 4
+
+
+def test_unab_cacao_dir_validation(tmp_path: Path) -> None:
+    import sys
+
+    scripts_dir = str(Path(__file__).resolve().parents[1] / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    import download_unab_cacao
+
+    res_empty = download_unab_cacao.validate_unab_cacao_dir(tmp_path)
+    assert not res_empty["valid"]
+
+    # Create matching image and label
+    (tmp_path / "unab_001.jpg").write_bytes(b"dummy")
+    (tmp_path / "unab_001.txt").write_text("1 0.5 0.5 0.2 0.3", encoding="utf-8")
+
+    res_valid = download_unab_cacao.validate_unab_cacao_dir(tmp_path)
+    assert res_valid["valid"]
+    assert res_valid["matched_pairs"] == 1
