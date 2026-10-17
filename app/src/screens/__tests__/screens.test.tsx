@@ -82,7 +82,7 @@ describe('Screen Suite: Onboarding, Home & Settings', () => {
 
       renderWithTheme(<HomeScreen onOpenSettings={onOpenSettingsMock} onScan={onScanMock} />);
 
-      expect(screen.getByTestId('home-title')).toHaveTextContent('HealthyCrop');
+      expect(screen.getByTestId('home-title')).toHaveTextContent('HealthyCropping');
       expect(screen.getByTestId('home-tagline')).toHaveTextContent(
         'Diagnóstico de cultivos fuera de línea',
       );
