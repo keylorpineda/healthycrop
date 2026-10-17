@@ -1,6 +1,6 @@
-# HealthyCrop — Datasets, Licensing & Data Governance
+# HealthyCropping — Datasets, Licensing & Data Governance
 
-This document tracks all external datasets used to train and evaluate the **HealthyCrop** models (`ml/`), their licensing terms, academic citations, taxonomy mappings, and leakage-prevention rules.
+This document tracks all external datasets used to train and evaluate the **HealthyCropping** models (`ml/`), their licensing terms, academic citations, taxonomy mappings, and leakage-prevention rules.
 
 > [!IMPORTANT]
 > **License Gate Policy**: Before downloading or processing any dataset in Phases 1 and 5, the download script and engineer must inspect the upstream license file (`license.txt` or repository metadata). If any dataset license is missing, ambiguous, or incompatible with open-source non-commercial research/educational model training, work stops immediately to consult the project owner. Raw and processed images (`ml/data/`) are never committed to Git or redistributed in GitHub Releases.
