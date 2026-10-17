@@ -47,7 +47,9 @@ export function OnboardingScreen({
     >
       {/* Top Header / Skip */}
       <View style={styles.topBar}>
-        <Text style={[theme.typography.title3, { color: theme.colors.primary }]}>HealthyCrop</Text>
+        <Text style={[theme.typography.title3, { color: theme.colors.primary }]}>
+          HealthyCropping
+        </Text>
         {activeSlide < 2 ? (
           <Pressable
             onPress={handleSkip}
