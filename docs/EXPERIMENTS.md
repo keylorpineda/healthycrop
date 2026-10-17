@@ -30,7 +30,7 @@ This document records all training, hyperparameter, ablation, and quantization e
 | `coffee-v0.1.0-ft-uncal` | Phase 2 | Coffee | Top projection fine-tuned (uncalibrated) | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `20 + 21` (best `E11`) | `0.7696` | `0.7240` | **`82.75%`** / — | — | Dihedral spatial aug + `conv_1` fine-tuning (`#17`) |
 | `coffee-v0.1.0-finetuned` | Phase 2 | Coffee | Top projection + `SpatialDropout2D` + `AdamW` + val logit calibration | `4` (`conv_1`, BN frozen) | `2e-3 / 3e-4` | `18 + 18` (best `E08`) | **`0.7911`** (`0.8150` peak trial) | **`0.7290`** (`0.7463` peak trial) | `81.35% / 81.12%` | `6.06 MB` | Best balanced checkpoint, Grad-CAM (`#17`), float16 export (`#18`) |
 | `cacao-v0.1.0-baseline` | Phase 5 | Cacao | Baseline (frozen backbone + val logit calibration) | `0` (frozen) | `2e-3 / —` | `22` (best `E14`) | `0.7748` | `0.7946` | `87.47% / —` | — | Initial frozen `MobileNetV3-Large` cacao baseline (`#28`) |
-| `cacao-v0.1.0-finetuned` | Phase 5 | Cacao | Top-30 block fine-tuning + `SpatialDropout2D` + `AdamW` + val logit calibration | `30` (BN frozen) | `2e-3 / 2e-4` | `22 + 25` (best `E19`) | **`0.8233`** | **`0.8502`** (`>= 0.80`) | **`91.73%`** / *Pending `#70`* | *Pending `#70`* | Exceeds `0.80` Macro-F1 target, Grad-CAM (`#28`) |
+| `cacao-v0.1.0-finetuned` | Phase 5 | Cacao | Top-30 block fine-tuning + `SpatialDropout2D` + `AdamW` + val logit calibration | `30` (BN frozen) | `2e-3 / 2e-4` | `22 + 25` (best `E19`) | **`0.8233`** | **`0.8502`** (`>= 0.80`) | **`91.73% / 91.73%`** | `6.06 MB` | Exceeds `0.80` Macro-F1 target, Grad-CAM (`#28`), float16 export (`#70`) |
 | `banana-001` | Phase 5 | Banana | Baseline (frozen backbone) | `0` (frozen) | `1e-3 / —` | *Pending* | *Pending* | *Pending* | *Pending* | — | Initial frozen `MobileNetV3-Large` baseline |
 | `banana-002` | Phase 5 | Banana | Fine-tuned top blocks | *Pending* | `1e-3 / 1e-4` | *Pending* | *Pending* | *Pending* | *Pending* | *Pending* | Float16 TFLite export candidate |
 
@@ -146,6 +146,12 @@ This document records all training, hyperparameter, ablation, and quantization e
 | **3-Class Macro Average** | `0.7946` | **`0.8500`** | **`0.8514`** | **`0.8502`** (`>= 0.80`) | **`399`** |
 
 ![Cacao Fine-Tuned Test Confusion Matrix](assets/confusion_matrices/cacao_finetuned.png)
+
+### 3.6 `cacao-v0.1.0` — Float16 TFLite Export & Confidence Calibration (`2026-10-16`, `#70`)
+
+- **Conversion**: Exported `cacao_finetuned.keras` via `ml/scripts/export_cacao_tflite.py` (`TFLiteConverter.from_saved_model` + `Optimize.DEFAULT` + `supported_types=[float16]`) to `ml/models/cacao/cacao_v0.1.0_fp16.tflite` (`6,055,744` bytes = `6.06 MB`, `< 10 MB`).
+- **Parity (test, `n = 399`)**: Keras `91.73%` → Float16 TFLite **`91.73%`** (`0.00 pp` drop), Macro-F1 `0.8502` → `0.8502`, top-1 predictions agree on **`100.00%`** (`399/399`) of test pods.
+- **Threshold calibration (val, `n = 404`)**: lowest top-1 probability with accepted precision `>= 0.90` → **`0.51`** (`90.15%` validation accepted precision at `98.02%` coverage; `91.73%` test accepted precision at `100.0%` coverage), recorded in `ml/models/cacao/registry.json`.
 
 ---
 
