@@ -1,6 +1,6 @@
-# Guía Paso a Paso de Configuración de Servicios y Herramientas (`HealthyCrop`)
+# Guía Paso a Paso de Configuración de Servicios y Herramientas (`HealthyCropping`)
 
-Esta guía explica desde cero, paso a paso y con los nombres exactos de cada menú, cómo instalar las herramientas locales y configurar todos los servicios gratuitos necesarios para desarrollar, entrenar, desplegar y compilar **HealthyCrop** (`com.keylorpineda.healthycrop`).
+Esta guía explica desde cero, paso a paso y con los nombres exactos de cada menú, cómo instalar las herramientas locales y configurar todos los servicios gratuitos necesarios para desarrollar, entrenar, desplegar y compilar **HealthyCropping** (`com.keylorpineda.healthycroppingping`).
 
 > [!CAUTION]
 > **Regla de oro de seguridad**: Nunca subas a Git archivos `.env`, `service-account.json`, `google-services.json`, `kaggle.json` ni llaves de firma (`.jks` / `.keystore`). Todos están ignorados en `.gitignore`.
@@ -17,7 +17,7 @@ Copy-Item app/.env.example app/.env
 
 | Servicio | Variable / Archivo | Destino | Descripción |
 | :--- | :--- | :--- | :--- |
-| **Firebase Admin** | `FIREBASE_PROJECT_ID` | `api/.env` | ID del proyecto en Firebase (ej. `healthycrop-cr`) |
+| **Firebase Admin** | `FIREBASE_PROJECT_ID` | `api/.env` | ID del proyecto en Firebase (ej. `healthycropping-cr`) |
 | **Firebase Admin** | `GOOGLE_APPLICATION_CREDENTIALS` | `api/.env` | Ruta local al JSON de cuenta de servicio (`./service-account.json`) |
 | **Firebase Android** | `google-services.json` | `app/google-services.json` | Archivo de configuración Android descargado de Firebase |
 | **Firebase Auth (App)** | `EXPO_PUBLIC_FIREBASE_API_KEY` (y demás `EXPO_PUBLIC_FIREBASE_*`) | `app/.env` | Credenciales públicas del cliente Firebase para iniciar sesión |
@@ -91,7 +91,7 @@ Usaremos el plan **Spark (Gratuito)** de Firebase.
 ### 2.1 Crear el Proyecto en Firebase
 1. Entra a [https://console.firebase.google.com/](https://console.firebase.google.com/) con tu cuenta de Google.
 2. Haz clic en **Create a project** (o **Agregar proyecto**).
-3. Escribe el nombre del proyecto (por ejemplo, `healthycrop-cr`) y anota el **Project ID** que aparece debajo del nombre. Haz clic en **Continue**.
+3. Escribe el nombre del proyecto (por ejemplo, `healthycropping-cr`) y anota el **Project ID** que aparece debajo del nombre. Haz clic en **Continue**.
 4. Desactiva **Enable Google Analytics for this project** (no lo necesitamos) y haz clic en **Create project**.
 5. Cuando termine, haz clic en **Continue**.
 
@@ -128,8 +128,8 @@ Usaremos el plan **Spark (Gratuito)** de Firebase.
 ### 2.4 Registrar la Aplicación Android y Obtener `google-services.json`
 1. En la página principal del proyecto en Firebase (**Project Overview**), haz clic en el ícono de **Android** (el robot verde) para agregar una app.
 2. Completa los campos:
-   - **Android package name**: escribe exactamente `com.keylorpineda.healthycrop`
-   - **App nickname (opcional)**: `HealthyCrop Android`
+   - **Android package name**: escribe exactamente `com.keylorpineda.healthycroppingping`
+   - **App nickname (opcional)**: `HealthyCropping Android`
    - **Debug signing certificate SHA-1 (opcional en MVP, requerido en v1.1 para Google Sign-In)**: puedes dejarlo en blanco por ahora.
 3. Haz clic en **Register app**.
 4. Haz clic en **Download google-services.json** y guarda el archivo en `app/google-services.json` (no se subirá a Git).
@@ -137,12 +137,12 @@ Usaremos el plan **Spark (Gratuito)** de Firebase.
 6. Para rellenar las variables `EXPO_PUBLIC_FIREBASE_*` en `app/.env`:
    - Haz clic en el ícono de engranaje (**⚙️ Project settings** / Configuración del proyecto) arriba a la izquierda.
    - En la pestaña **General**, baja a la sección **Your apps**.
-   - Si también deseas las llaves JS para el SDK web/React Native, haz clic en **Add app** -> ícono **Web (`</>`)**, ponle `HealthyCrop Client`, haz clic en **Register app**, y copia los valores del objeto `firebaseConfig` a `app/.env`:
+   - Si también deseas las llaves JS para el SDK web/React Native, haz clic en **Add app** -> ícono **Web (`</>`)**, ponle `HealthyCropping Client`, haz clic en **Register app**, y copia los valores del objeto `firebaseConfig` a `app/.env`:
      ```env
      EXPO_PUBLIC_FIREBASE_API_KEY=AIzaSy...
-     EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=healthycrop-cr.firebaseapp.com
-     EXPO_PUBLIC_FIREBASE_PROJECT_ID=healthycrop-cr
-     EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=healthycrop-cr.firebasestorage.app
+     EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=healthycropping-cr.firebaseapp.com
+     EXPO_PUBLIC_FIREBASE_PROJECT_ID=healthycropping-cr
+     EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=healthycropping-cr.firebasestorage.app
      EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=1234567890
      EXPO_PUBLIC_FIREBASE_APP_ID=1:1234567890:web:abcdef123456
      ```
@@ -153,7 +153,7 @@ Usaremos el plan **Spark (Gratuito)** de Firebase.
 3. Se descargará un archivo `.json`. Muévelo y renómbralo como `api/service-account.json`.
 4. En `api/.env`, configura:
    ```env
-   FIREBASE_PROJECT_ID=healthycrop-cr
+   FIREBASE_PROJECT_ID=healthycropping-cr
    GOOGLE_APPLICATION_CREDENTIALS=./service-account.json
    ```
 5. **Cómo verificar que funciona**:
@@ -171,13 +171,13 @@ Usaremos el plan **Spark (Gratuito)** de Firebase.
 Usaremos el nivel gratuito (**Free of charge tier**) de Google AI Studio para las explicaciones RAG en `api/`.
 
 > [!WARNING]
-> **Advertencia sobre privacidad en el nivel gratuito de Google AI Studio**: En el plan gratuito (*Free tier*) de la API de Gemini en Google AI Studio, Google puede utilizar los *prompts* y las respuestas enviadas para mejorar sus productos y entrenar modelos (a diferencia del plan de pago / Pay-as-you-go). Por esta razón, **HealthyCrop nunca envía nombres de personas, correos electrónicos, nombres de fincas ni coordenadas GPS a Gemini**; únicamente envía el nombre del cultivo, la clase de enfermedad predicha, el nivel de severidad y los fragmentos públicos de manuales técnicos (ICAFE / MAG).
+> **Advertencia sobre privacidad en el nivel gratuito de Google AI Studio**: En el plan gratuito (*Free tier*) de la API de Gemini en Google AI Studio, Google puede utilizar los *prompts* y las respuestas enviadas para mejorar sus productos y entrenar modelos (a diferencia del plan de pago / Pay-as-you-go). Por esta razón, **HealthyCropping nunca envía nombres de personas, correos electrónicos, nombres de fincas ni coordenadas GPS a Gemini**; únicamente envía el nombre del cultivo, la clase de enfermedad predicha, el nivel de severidad y los fragmentos públicos de manuales técnicos (ICAFE / MAG).
 
 ### Pasos
 1. Entra a [https://aistudio.google.com/](https://aistudio.google.com/) e inicia sesión con tu cuenta de Google.
 2. En el menú lateral izquierdo, haz clic en **Get API key** (Obtener clave de API).
 3. Haz clic en el botón **Create API key**.
-4. Selecciona tu proyecto de Google Cloud/Firebase (`healthycrop-cr`) o haz clic en **Create API key in new project**, y copia la clave generada (`AIzaSy...`).
+4. Selecciona tu proyecto de Google Cloud/Firebase (`healthycropping-cr`) o haz clic en **Create API key in new project**, y copia la clave generada (`AIzaSy...`).
 5. Abre `api/.env` y pega:
    ```env
    GEMINI_API_KEY=AIzaSyTuClaveDeGeminiAqui
@@ -200,7 +200,7 @@ Para el cálculo mensual de NDVI con Sentinel-2 en la versión `v1.2`, utilizamo
 2. Haz clic en **Register a Noncommercial or Commercial Cloud project**.
 3. Selecciona **Unpaid usage** (Uso gratuito / no comercial).
 4. En *Project type*, selecciona **Community / Open Source / Education / Research** y haz clic en **Next**.
-5. Elige tu proyecto de Google Cloud (`healthycrop-cr`), acepta los términos y completa el registro.
+5. Elige tu proyecto de Google Cloud (`healthycropping-cr`), acepta los términos y completa el registro.
 6. En [Google Cloud Console -> IAM & Admin -> Service Accounts](https://console.cloud.google.com/iam-admin/serviceaccounts), otorga a tu cuenta de servicio el rol **Earth Engine Resource Viewer** (`roles/earthengine.viewer`) cuando comience la fase `v1.2`.
 7. **Cómo verificar que funciona**:
    Abre [https://code.earthengine.google.com/](https://code.earthengine.google.com/); si carga el editor de código sin errores de permisos en tu proyecto, el registro está activo.
@@ -282,19 +282,19 @@ La API genera parámetros firmados para que la app suba fotos redimensionadas (`
 Desplegaremos `api/` como un **Web Service** gratuito en Render.
 
 > [!NOTE]
-> **Comportamiento de arranque en frío (Cold Starts)**: En el plan gratuito (*Free instance*) de Render, el servidor entra en suspensión tras **15 minutos de inactividad**. La primera petición tras ese periodo tardará entre **30 y 50 segundos** mientras el contenedor despierta. Como **HealthyCrop** es *offline-first*, el diagnóstico en el teléfono es instantáneo sin conexión y la sincronización en segundo plano reintenta automáticamente cuando el servidor responde.
+> **Comportamiento de arranque en frío (Cold Starts)**: En el plan gratuito (*Free instance*) de Render, el servidor entra en suspensión tras **15 minutos de inactividad**. La primera petición tras ese periodo tardará entre **30 y 50 segundos** mientras el contenedor despierta. Como **HealthyCropping** es *offline-first*, el diagnóstico en el teléfono es instantáneo sin conexión y la sincronización en segundo plano reintenta automáticamente cuando el servidor responde.
 
 ### Pasos
 1. Entra a [https://dashboard.render.com/](https://dashboard.render.com/) e inicia sesión con tu cuenta de GitHub (`keylorpineda`).
 2. Haz clic en el botón **New +** (arriba a la derecha) -> **Web Service**.
 3. Selecciona **Build and deploy from a Git repository** y conecta el repositorio `keylorpineda/healthycrop`.
 4. Configura el servicio con estos valores exactos:
-   - **Name**: `healthycrop-api`
+   - **Name**: `healthycroppingping-api`
    - **Root Directory**: `api`
    - **Runtime**: `Python 3`
    - **Branch**: `main`
    - **Build Command**: `pip install uv && uv sync --frozen --no-dev`
-   - **Start Command**: `uv run uvicorn healthycrop_api.main:app --host 0.0.0.0 --port $PORT`
+   - **Start Command**: `uv run uvicorn healthycroppingping_api.main:app --host 0.0.0.0 --port $PORT`
    - **Instance Type**: selecciona **Free ($0/month)**.
 5. Baja a la sección **Environment Variables** y agrega las variables de `api/.env`:
    - `PYTHON_VERSION` = `3.12.0`
@@ -310,13 +310,13 @@ Desplegaremos `api/` como un **Web Service** gratuito en Render.
    - **Filename**: `service-account.json`
    - **Contents**: pega el contenido completo de tu archivo `api/service-account.json`.
 7. Haz clic en **Create Web Service**.
-8. Una vez desplegado, copia la URL pública (ej. `https://healthycrop-api.onrender.com`) y colócala en `app/.env`:
+8. Una vez desplegado, copia la URL pública (ej. `https://healthycroppingping-api.onrender.com`) y colócala en `app/.env`:
    ```env
-   EXPO_PUBLIC_API_URL=https://healthycrop-api.onrender.com
+   EXPO_PUBLIC_API_URL=https://healthycroppingping-api.onrender.com
    ```
 9. **Cómo verificar que funciona**:
    ```powershell
-   curl https://healthycrop-api.onrender.com/health
+   curl https://healthycroppingping-api.onrender.com/health
    ```
    Debe devolver `{"status":"ok"}`.
 
@@ -340,7 +340,7 @@ En `v1.1` utilizamos la API meteorológica de [Open-Meteo](https://open-meteo.co
 
 ## 10. Compilación e Instalación del APK en un Teléfono Android
 
-Debido a que **HealthyCrop** ejecuta modelos nativos TensorFlow Lite en C++/JSI (`react-native-fast-tflite`), **no puede ejecutarse dentro de Expo Go**. Se utiliza un **Development Build** durante el desarrollo y un **APK standalone** para distribución en GitHub Releases.
+Debido a que **HealthyCropping** ejecuta modelos nativos TensorFlow Lite en C++/JSI (`react-native-fast-tflite`), **no puede ejecutarse dentro de Expo Go**. Se utiliza un **Development Build** durante el desarrollo y un **APK standalone** para distribución en GitHub Releases.
 
 ### 10.1 Preparar tu Teléfono Android
 1. En tu teléfono Android, abre **Ajustes** (Configuración) -> **Acerca del teléfono** -> **Información de software**.
@@ -361,7 +361,7 @@ Debido a que **HealthyCrop** ejecuta modelos nativos TensorFlow Lite en C++/JSI 
    cd app
    pnpm expo run:android
    ```
-   Esto generará el proyecto nativo Android, compilará el *Development Build* e instalará la app `HealthyCrop` directamente en tu teléfono.
+   Esto generará el proyecto nativo Android, compilará el *Development Build* e instalará la app `HealthyCropping` directamente en tu teléfono.
 
 ### 10.3 Opción B: Compilar un APK Instalable con EAS Build (Plan Gratuito)
 1. Instala EAS CLI e inicia sesión:
@@ -379,10 +379,10 @@ Debido a que **HealthyCrop** ejecuta modelos nativos TensorFlow Lite en C++/JSI 
 ### 10.4 Cómo Instalar el APK Descargado (desde EAS o GitHub Releases)
 - **Desde el teléfono**:
   1. Abre la página de [GitHub Releases de `keylorpineda/healthycrop`](https://github.com/keylorpineda/healthycrop/releases) en el navegador del teléfono.
-  2. Descarga el archivo `healthycrop-vX.Y.Z.apk`.
+  2. Descarga el archivo `healthycropping-vX.Y.Z.apk`.
   3. Al abrirlo, si Android solicita permiso, activa **Permitir desde esta fuente** (*Install unknown apps*) y pulsa **Instalar**.
 - **Desde la computadora por USB (`adb`)**:
   ```powershell
-  adb install -r healthycrop-v1.0.0.apk
+  adb install -r healthycropping-v1.0.0.apk
   ```
-  - **Cómo verificar que funciona**: Pon tu teléfono en **Modo Avión**, abre **HealthyCrop**, completa las 3 pantallas de introducción con el aviso agronómico, selecciona **Café**, y realiza un escaneo sin conexión.
+  - **Cómo verificar que funciona**: Pon tu teléfono en **Modo Avión**, abre **HealthyCropping**, completa las 3 pantallas de introducción con el aviso agronómico, selecciona **Café**, y realiza un escaneo sin conexión.
