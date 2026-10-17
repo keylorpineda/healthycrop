@@ -156,3 +156,19 @@ This log documents what was built, key architectural decisions, and technical pr
 ### Problems Solved
 - **Jest pnpm / Windows Module Resolution for React Native**:
   - `pnpm`'s hoisted directory structure places packages inside `.pnpm/<name>@<ver>/node_modules/<name>`, and Windows uses backslashes in paths. Configured `transformIgnorePatterns` in `app/jest.config.js` to match both Windows separators and `.pnpm` paths so `@react-native`, `react-native`, and `expo` are properly transformed through Babel, resolving syntax errors on Flow type annotations in `@react-native/js-polyfills`.
+
+---
+
+## Phase 5 — Cacao & Banana Models (`v0.3.0`)
+
+### Decisions Made
+- **Cacao Dataset Licensing & YOLO Pod Cropping (`#27`)**:
+  - Verified open licenses in `docs/DATASETS.md` for **CocoaMoniliaDataSet** (Zenodo `10.5281/zenodo.17156051`, CC BY 4.0) and **UNAB Cocoa Diseases** (`serranosebas/enfermedades-cacao-yolov4`, ODbL v1.0).
+  - Implemented `ml/scripts/download_cocoamonilia.py` (with Zenodo `md5:` checksum verification) and `ml/scripts/download_unab_cacao.py` (with Kaggle public API v1 download fallback).
+  - Verified `classes.txt` in UNAB (`0 = Fitoftora` -> `black_pod`, `1 = Monilia` -> `monilia`, `2 = Sana` -> `healthy`) and configured `ml/configs/cacao.yaml` with `5%` bounding-box margin (`box_margin: 0.05`).
+  - Implemented `ml/scripts/prepare_cacao.py` cropping each YOLO pod bounding box to `224x224` RGB while grouping all pods from the same parent photograph under `group_id = unab_<stem>` to prevent cross-split leakage.
+  - Produced `2,646` clean preprocessed cacao pod images (`1,863` `healthy`, `556` `monilia`, `227` `black_pod`) across `1,367` distinct `group_id`s after removing `5` perceptual-hash near-duplicates (`d_Hamming <= 2`), with zero `group_id` overlap across the `70/15/15` split (`seed=42`).
+  - Generated `docs/data_reports/cacao.md` and `docs/assets/data_reports/cacao_grid.png`, and added unit tests in `ml/tests/test_prepare_cacao.py` and `ml/tests/test_download.py`.
+- **Standardized Milestone Granularity & Release CI Fix**:
+  - Standardized all 8 repository milestones (`v0.1.0` through `v1.2.0`) to 7–10 single-PR issues each without duplicate PR milestone counting.
+  - Replaced `android-actions/setup-android@v3` in `.github/workflows/release.yml` so Command-Line Tools 16.0 no longer fails on the removed `tools` package.
