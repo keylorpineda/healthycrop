@@ -1,12 +1,12 @@
-# AGENTS.md — HealthyCrop Guide
+# AGENTS.md — HealthyCropping Guide
 
 ## Summary
-**HealthyCrop** (`com.keylorpineda.healthycrop`) is an open-source, non-commercial, offline-first Android app that detects crop diseases (coffee leaf, cacao pod, banana leaf) from phone photos via on-device TFLite models, generates grounded explanations with Gemini RAG, and tracks farms/plots. First market: Costa Rica. Distributed only as an APK on GitHub Releases. Supports decisions; does not replace an agronomist.
+**HealthyCropping** (`com.keylorpineda.healthycropping`) is an open-source, non-commercial, offline-first Android app that detects crop diseases (coffee leaf, cacao pod, banana leaf) from phone photos via on-device TFLite models, generates grounded explanations with Gemini RAG, and tracks farms/plots. First market: Costa Rica. Distributed only as an APK on GitHub Releases. Supports decisions; does not replace an agronomist.
 Owner & author: **Keylor Pineda** (`@keylorpineda`).
 
 ## Layout
 ```text
-healthycrop/
+healthycropping/
 ├── AGENTS.md      # Rules & workflow (< 4,000 chars)
 ├── .github/       # Community files, templates, CI/release workflows
 ├── ml/            # Python 3.12 (uv): data, training, eval, TFLite export

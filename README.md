@@ -1,4 +1,4 @@
-# HealthyCrop
+# HealthyCropping
 
 [![CI](https://github.com/keylorpineda/healthycrop/actions/workflows/ci.yml/badge.svg)](https://github.com/keylorpineda/healthycrop/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/keylorpineda/healthycrop/blob/main/LICENSE)
@@ -6,7 +6,7 @@
 
 Offline-first Android app that detects coffee, cacao, and banana diseases from a phone photo, explains the result with grounded agronomic references, and tracks farms and plots.
 
-> **Agronomic Disclaimer**: HealthyCrop is a non-commercial, open-source decision-support tool designed initially for Costa Rica. **It supports field decisions and does not replace a certified agronomist or phytosanitary laboratory.** Always consult an agricultural professional before applying agrochemicals or removing plants.
+> **Agronomic Disclaimer**: HealthyCropping is a non-commercial, open-source decision-support tool designed initially for Costa Rica. **It supports field decisions and does not replace a certified agronomist or phytosanitary laboratory.** Always consult an agricultural professional before applying agrochemicals or removing plants.
 
 ---
 
@@ -101,7 +101,7 @@ For step-by-step instructions on setting up Firebase, Google AI Studio (Gemini),
 ## Repository Structure
 
 ```text
-healthycrop/
+healthycropping/
 ├── AGENTS.md                   # Engineering rules, commands, and session workflow
 ├── .github/                    # Issue/PR templates, CODEOWNERS, Dependabot, CI/Release workflows
 ├── ml/                         # Python (uv): dataset download/prep, training, evaluation, TFLite export
@@ -150,18 +150,18 @@ The MIT license in [`LICENSE`](LICENSE) applies **solely to the source code** in
 
 ## Non-Commercial Distribution Note
 
-**HealthyCrop** (`com.keylorpineda.healthycrop`) is strictly non-commercial. It is distributed free of charge as an installable Android `.apk` exclusively through [GitHub Releases](https://github.com/keylorpineda/healthycrop/releases), with no app store listings, advertisements, or paid subscriptions.
+**HealthyCropping** (`com.keylorpineda.healthycropping`) is strictly non-commercial. It is distributed free of charge as an installable Android `.apk` exclusively through [GitHub Releases](https://github.com/keylorpineda/healthycrop/releases), with no app store listings, advertisements, or paid subscriptions.
 
 ---
 
 ## How to Cite
 
-If you reference or build upon **HealthyCrop**, please cite it using [`CITATION.cff`](CITATION.cff):
+If you reference or build upon **HealthyCropping**, please cite it using [`CITATION.cff`](CITATION.cff):
 
 ```bibtex
 @software{pineda2026healthycrop,
   author       = {Pineda, Keylor},
-  title        = {{HealthyCrop: Offline-First Crop Disease Detection for Coffee, Cacao, and Banana}},
+  title        = {{HealthyCropping: Offline-First Crop Disease Detection for Coffee, Cacao, and Banana}},
   year         = {2026},
   url          = {https://github.com/keylorpineda/healthycrop},
   version      = {0.1.0},
