@@ -69,7 +69,7 @@ def compute_manifest_summary(
             per_class_source[label][source] += 1
             per_class_groups[label].add(group_id)
 
-            if label == "leaf_rust" and severity and severity != "0":
+            if label in {"leaf_rust", "monilia"} and severity and severity != "0":
                 severity_split[severity][split] += 1
                 severity_split[severity]["total"] += 1
 
@@ -197,6 +197,10 @@ def render_class_sample_grid(
     output_png.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output_png, format="PNG", optimize=True)
     return output_png
+
+
+# Alias for backwards and cross-crop compatibility
+generate_sample_grid = render_class_sample_grid
 
 
 def format_coffee_report_markdown(
@@ -378,6 +382,162 @@ def format_coffee_report_markdown(
             "## 6. Preprocessed Sample Grid (`224x224` RGB)",
             "",
             f"![Coffee 224x224 Preprocessed Sample Grid]({grid_rel_path})",
+            "",
+        ]
+    )
+
+    return "\n".join(lines)
+
+
+def format_cacao_report_markdown(
+    summary: ManifestSummary,
+    prep_stats: dict[str, Any],
+    grid_rel_path: str = "../assets/data_reports/cacao_grid.png",
+) -> str:
+    """Format the complete `docs/data_reports/cacao.md` Markdown report."""
+    raw_cand = prep_stats.get("total_candidates", summary.total_images)
+    unmapped_drop = prep_stats.get("skipped_unmapped", 0)
+    corrupt_drop = prep_stats.get("corrupt_or_missing_dropped", 0)
+    phash_dist = prep_stats.get("phash_max_distance", 2)
+    dups_rem = prep_stats.get("duplicates_removed_total", 0)
+
+    lines: list[str] = [
+        "# Cacao Pod Disease Dataset Report (`Phase 5`)",
+        "",
+        "## 1. Executive Summary",
+        "",
+        "- **Target Crop**: Cacao (*Theobroma cacao*)",
+        (
+            "- **Sources Combined**: **CocoaMoniliaDataSet** "
+            "(`10.5281/zenodo.17156051`, CC BY 4.0) + "
+            "**UNAB Cocoa Diseases** (ODbL v1.0 / © Original Authors, "
+            "YOLOv4 bounding-box pod crops)"
+        ),
+        f"- **Total Candidate Pods Extracted**: `{raw_cand}`",
+        f"- **Unmapped / Low-Quality Labels Excluded**: `{unmapped_drop}`",
+        f"- **Unreadable / Corrupt Crops Dropped**: `{corrupt_drop}`",
+        (
+            "- **Near-Duplicates Removed (`imagehash.phash`, "
+            f"Hamming distance <= `{phash_dist}`)**: `{dups_rem}`"
+        ),
+        (
+            "- **Final Clean Preprocessed Images (`224x224` RGB)**: "
+            f"**`{summary.total_images}`** across **`{summary.total_groups}`** "
+            "distinct tree/photograph `group_id`s"
+        ),
+        (
+            "- **Zero `group_id` Overlap Across Splits (`train` / `val` / `test`)**: "
+            f"**`{summary.zero_group_leakage}`** (`seed=42`)"
+        ),
+        "",
+        "---",
+        "",
+        "## 2. Per-Class Split & Source Distribution",
+        "",
+        (
+            "| Class (`label`) | Train (`70%`) | Val (`15%`) | Test (`15%`) | Total Images | "
+            "Distinct `group_id`s | CocoaMonilia | UNAB |"
+        ),
+        "|---|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+
+    train_total = 0
+    val_total = 0
+    test_total = 0
+    cocoa_total = 0
+    unab_total = 0
+
+    for cls_name in summary.classes:
+        splits = summary.per_class_split_counts.get(
+            cls_name, {"train": 0, "val": 0, "test": 0, "total": 0}
+        )
+        sources = summary.per_class_source_counts.get(cls_name, {})
+        groups = summary.per_class_group_counts.get(cls_name, 0)
+        cocoa_cnt = sources.get("cocoamonilia", 0)
+        unab_cnt = sources.get("unab", 0)
+        train_total += splits["train"]
+        val_total += splits["val"]
+        test_total += splits["test"]
+        cocoa_total += cocoa_cnt
+        unab_total += unab_cnt
+        lines.append(
+            f"| `{cls_name}` | {splits['train']} | {splits['val']} | {splits['test']} "
+            f"| **{splits['total']}** | {groups} | {cocoa_cnt} | {unab_cnt} |"
+        )
+
+    lines.extend(
+        [
+            f"| **Total** | **{train_total}** | **{val_total}** | **{test_total}** "
+            f"| **{summary.total_images}** | **{summary.total_groups}** "
+            f"| **{cocoa_total}** | **{unab_total}** |",
+            "",
+            "---",
+            "",
+            "## 3. Monilia Infection Stage Distribution (`severity` Metadata)",
+            "",
+            "CocoaMoniliaDataSet annotates ordinal stages for monilia (*Moniliophthora roreri*):",
+            "- `severity = 0`: Healthy pod (`h0`)",
+            "- `severity = 1`: Stage 1 / Early oily/yellowish spot (`m1`)",
+            "- `severity = 2`: Stage 2 / Chocolate spot & necrosis (`m2`)",
+            "- `severity = 3`: Stage 3 / Sporulation / white mycelial felt (`m3`)",
+            "",
+            "| Severity Level | Train | Val | Test | Total |",
+            "|---|---:|---:|---:|---:|",
+        ]
+    )
+
+    for sev_level in sorted(summary.severity_split_counts.keys()):
+        counts = summary.severity_split_counts[sev_level]
+        lines.append(
+            f"| Severity `{sev_level}` | {counts['train']} | {counts['val']} "
+            f"| {counts['test']} | **{counts['total']}** |"
+        )
+
+    if summary.small_classes:
+        small_list_str = ", ".join(f"`{c}`" for c in summary.small_classes)
+    else:
+        small_list_str = (
+            f"None (all {len(summary.classes)} primary classes exceed "
+            f"{summary.min_train_samples} training images)"
+        )
+
+    lines.extend(
+        [
+            "",
+            "---",
+            "",
+            "## 4. Small-Class Merging Evaluation (`< 50` Training Images Rule)",
+            "",
+            (
+                f"- **Minimum Training Image Threshold**: `{summary.min_train_samples}` images "
+                "in `train` split."
+            ),
+            f"- **Primary Classes Below Threshold**: **{small_list_str}**.",
+            (
+                "- **Taxonomy Design**: Monilia stages `m1`-`m3` are consolidated under the "
+                "primary `monilia` class to provide robust classification, while stage numbers "
+                "are retained in the `severity` metadata for agronomic guidance."
+            ),
+            "",
+            "---",
+            "",
+            "## 5. Perceptual-Hash Deduplication & Grouped Leakage Prevention",
+            "",
+            (
+                "- Perceptual hashes (`imagehash.phash`, Hamming distance "
+                f"`<= {phash_dist}`) removed **`{dups_rem}` duplicate samples**."
+            ),
+            (
+                "- **UNAB Pod Grouping**: Multiple pods cropped from the same tree photograph "
+                "share `group_id = unab_<image_stem>`, ensuring no multi-pod parent image leaks "
+                "across `train`, `val`, and `test` splits."
+            ),
+            "",
+            "---",
+            "",
+            "## 6. Preprocessed Sample Grid (`224x224` RGB)",
+            "",
+            f"![Cacao 224x224 Preprocessed Sample Grid]({grid_rel_path})",
             "",
         ]
     )
