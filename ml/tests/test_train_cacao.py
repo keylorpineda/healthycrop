@@ -5,8 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from healthycrop_ml.config import load_crop_config
-from healthycrop_ml.model import build_mobilenetv3_classifier
+from healthycropping_ml.config import load_crop_config
+from healthycropping_ml.model import build_mobilenetv3_classifier
 
 
 def test_cacao_config_and_model_head_shape() -> None:

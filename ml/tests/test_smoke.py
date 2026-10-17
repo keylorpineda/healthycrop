@@ -1,6 +1,6 @@
 """Empty suite smoke test for Phase 0 CI verification."""
 
-from healthycrop_ml import __version__
+from healthycropping_ml import __version__
 
 
 def test_version() -> None:

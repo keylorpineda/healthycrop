@@ -10,19 +10,19 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from healthycrop_ml.config import CropConfig, load_crop_config
-from healthycrop_ml.dedup import HashedItem, compute_phash_hex, deduplicate_hashed_items
-from healthycrop_ml.preprocess import (
+from healthycropping_ml.config import CropConfig, load_crop_config
+from healthycropping_ml.dedup import HashedItem, compute_phash_hex, deduplicate_hashed_items
+from healthycropping_ml.preprocess import (
     CandidateSample,
     load_clean_sample_image,
     parse_yolo_line,
 )
-from healthycrop_ml.report import (
+from healthycropping_ml.report import (
     compute_manifest_summary,
     format_cacao_report_markdown,
     render_class_sample_grid,
 )
-from healthycrop_ml.split import assign_grouped_stratified_splits, verify_no_group_leakage
+from healthycropping_ml.split import assign_grouped_stratified_splits, verify_no_group_leakage
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = REPO_ROOT / "ml" / "configs" / "cacao.yaml"

@@ -9,7 +9,7 @@ from pathlib import Path
 import httpx
 import pytest
 
-from healthycrop_ml.download import (
+from healthycropping_ml.download import (
     DatasetDownloadError,
     FileSpec,
     MendeleyDatasetMetadata,
@@ -26,7 +26,7 @@ from healthycrop_ml.download import (
 
 def test_compute_and_verify_sha256(tmp_path: Path) -> None:
     sample = tmp_path / "sample.bin"
-    payload = b"healthycrop-coffee-dataset-bytes"
+    payload = b"healthycropping-coffee-dataset-bytes"
     sample.write_bytes(payload)
     expected = hashlib.sha256(payload).hexdigest()
 

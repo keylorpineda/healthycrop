@@ -10,7 +10,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-from healthycrop_ml.export_tflite import (
+from healthycropping_ml.export_tflite import (
     REQUIRED_REGISTRY_KEYS,
     ThresholdCalibration,
     accuracy_from_probs,
@@ -22,7 +22,7 @@ from healthycrop_ml.export_tflite import (
     run_tflite_inference,
     validate_registry,
 )
-from healthycrop_ml.model import build_mobilenetv3_classifier
+from healthycropping_ml.model import build_mobilenetv3_classifier
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 COFFEE_REGISTRY = REPO_ROOT / "ml" / "models" / "coffee" / "registry.json"
