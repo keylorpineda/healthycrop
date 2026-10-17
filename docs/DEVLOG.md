@@ -1,4 +1,4 @@
-# HealthyCrop — Engineering Development Log (DEVLOG)
+# HealthyCropping — Engineering Development Log (DEVLOG)
 
 This log documents what was built, key architectural decisions, and technical problems solved at the end of each phase.
 
@@ -38,16 +38,16 @@ This log documents what was built, key architectural decisions, and technical pr
 ### Built
 - **Dataset Verification & Download Pipeline (`#13`)**:
   - Verified **RoCoLe** (`10.17632/c5yvn32dzg.2`) and **BRACOL** (`10.17632/yy2k5y8mxg.1`) licenses (`CC BY 4.0`) via Mendeley Data API and documented exact metadata in [`docs/DATASETS.md`](DATASETS.md).
-  - Implemented [`ml/src/healthycrop_ml/download.py`](../ml/src/healthycrop_ml/download.py), [`ml/scripts/download_rocole.py`](../ml/scripts/download_rocole.py), [`ml/scripts/download_bracol.py`](../ml/scripts/download_bracol.py), and [`ml/tests/test_download.py`](../ml/tests/test_download.py).
+  - Implemented [`ml/src/healthycroppingping_ml/download.py`](../ml/src/healthycroppingping_ml/download.py), [`ml/scripts/download_rocole.py`](../ml/scripts/download_rocole.py), [`ml/scripts/download_bracol.py`](../ml/scripts/download_bracol.py), and [`ml/tests/test_download.py`](../ml/tests/test_download.py).
 - **Coffee Data Preparation, Perceptual-Hash Deduplication & Grouped Split (`#14`)**:
   - Created [`ml/configs/coffee.yaml`](../ml/configs/coffee.yaml) defining the 6-class coffee taxonomy (`healthy`, `leaf_rust` + severity `1`–`4`, `leaf_miner`, `cercospora`, `brown_leaf_spot`, `red_spider_mite`), `224x224` target size, and `70/15/15` split parameters.
-  - Implemented [`ml/src/healthycrop_ml/config.py`](../ml/src/healthycrop_ml/config.py), [`ml/src/healthycrop_ml/preprocess.py`](../ml/src/healthycrop_ml/preprocess.py), [`ml/src/healthycrop_ml/dedup.py`](../ml/src/healthycrop_ml/dedup.py), [`ml/src/healthycrop_ml/split.py`](../ml/src/healthycrop_ml/split.py), [`ml/scripts/prepare_coffee.py`](../ml/scripts/prepare_coffee.py), and [`ml/tests/test_prepare_coffee.py`](../ml/tests/test_prepare_coffee.py).
+  - Implemented [`ml/src/healthycroppingping_ml/config.py`](../ml/src/healthycroppingping_ml/config.py), [`ml/src/healthycroppingping_ml/preprocess.py`](../ml/src/healthycroppingping_ml/preprocess.py), [`ml/src/healthycroppingping_ml/dedup.py`](../ml/src/healthycroppingping_ml/dedup.py), [`ml/src/healthycroppingping_ml/split.py`](../ml/src/healthycroppingping_ml/split.py), [`ml/scripts/prepare_coffee.py`](../ml/scripts/prepare_coffee.py), and [`ml/tests/test_prepare_coffee.py`](../ml/tests/test_prepare_coffee.py).
   - Processed `2,902` mapped raw images (`1,560` RoCoLe + `1,342` BRACOL valid whole leaves after dropping `62` undetermined stress rows), removed `78` near-duplicate images (`d_Hamming <= 2`), and produced `2,824` leak-free `224x224` RGB images across `train` (`1,969`), `val` (`426`), and `test` (`429`).
 - **Coffee Data Report & Small-Class Merging Evaluation (`#15`)**:
-  - Implemented [`ml/src/healthycrop_ml/report.py`](../ml/src/healthycrop_ml/report.py), [`ml/scripts/generate_coffee_report.py`](../ml/scripts/generate_coffee_report.py), and [`ml/tests/test_report.py`](../ml/tests/test_report.py).
+  - Implemented [`ml/src/healthycroppingping_ml/report.py`](../ml/src/healthycroppingping_ml/report.py), [`ml/scripts/generate_coffee_report.py`](../ml/scripts/generate_coffee_report.py), and [`ml/tests/test_report.py`](../ml/tests/test_report.py).
   - Generated [`docs/data_reports/coffee.md`](data_reports/coffee.md) and [`docs/assets/data_reports/coffee_grid.png`](assets/data_reports/coffee_grid.png), confirming all 6 primary coffee classes exceed the `50` training-image threshold (`cercospora` smallest at `96` train images) and documenting why `leaf_rust` severity levels (`1`–`4`, where `severity=4` has only `42` train images) are consolidated into `leaf_rust` with `severity` metadata.
 - **Frozen-Backbone `MobileNetV3-Large` Baseline & Metrics (`#16`)**:
-  - Implemented [`ml/src/healthycrop_ml/evaluate.py`](../ml/src/healthycrop_ml/evaluate.py), [`ml/src/healthycrop_ml/model.py`](../ml/src/healthycrop_ml/model.py), [`ml/src/healthycrop_ml/train.py`](../ml/src/healthycrop_ml/train.py), [`ml/scripts/train_coffee.py`](../ml/scripts/train_coffee.py), [`ml/notebooks/01_coffee_training.ipynb`](../ml/notebooks/01_coffee_training.ipynb), and [`ml/tests/test_model_and_eval.py`](../ml/tests/test_model_and_eval.py).
+  - Implemented [`ml/src/healthycroppingping_ml/evaluate.py`](../ml/src/healthycroppingping_ml/evaluate.py), [`ml/src/healthycroppingping_ml/model.py`](../ml/src/healthycroppingping_ml/model.py), [`ml/src/healthycroppingping_ml/train.py`](../ml/src/healthycroppingping_ml/train.py), [`ml/scripts/train_coffee.py`](../ml/scripts/train_coffee.py), [`ml/notebooks/01_coffee_training.ipynb`](../ml/notebooks/01_coffee_training.ipynb), and [`ml/tests/test_model_and_eval.py`](../ml/tests/test_model_and_eval.py).
   - Trained the frozen-backbone baseline (`coffee-v0.1.0-baseline`), achieving **`82.16%` validation accuracy (`0.7637` validation Macro-F1)** and **`79.72%` held-out test accuracy (`0.7135` test Macro-F1)**, with confusion matrix saved to [`docs/assets/confusion_matrices/coffee_baseline.png`](assets/confusion_matrices/coffee_baseline.png) and full per-class metrics logged in [`docs/EXPERIMENTS.md`](EXPERIMENTS.md).
 
 ### Decisions
@@ -56,7 +56,7 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ### Problems Solved
 - **Upstream Truncated BRACOL ZIP Archive**:
-  - Mendeley's hosted `BRACOL_coffee_leaf_ images_datasets.zip` (`164,516,964` bytes) was uploaded truncated mid-entry at EOF (`leaf/images/688.jpg`), lacking a ZIP central directory (`PK\x05\x06`). Implemented `_extract_zip_local_headers_safe` in [`ml/src/healthycrop_ml/download.py`](../ml/src/healthycrop_ml/download.py) to sequentially parse `PK\x03\x04` local file headers, inflate and CRC-verify all `1,401` intact whole-leaf images plus `leaf/dataset.csv`, and safely skip the single truncated trailing entry.
+  - Mendeley's hosted `BRACOL_coffee_leaf_ images_datasets.zip` (`164,516,964` bytes) was uploaded truncated mid-entry at EOF (`leaf/images/688.jpg`), lacking a ZIP central directory (`PK\x05\x06`). Implemented `_extract_zip_local_headers_safe` in [`ml/src/healthycroppingping_ml/download.py`](../ml/src/healthycroppingping_ml/download.py) to sequentially parse `PK\x03\x04` local file headers, inflate and CRC-verify all `1,401` intact whole-leaf images plus `leaf/dataset.csv`, and safely skip the single truncated trailing entry.
 - **Cross-Plant Duplicate Leakage in RoCoLe**:
   - `imagehash.phash` deduplication discovered `78` exact/near-duplicate photos in RoCoLe that had been assigned to *different* plant IDs upstream (e.g., `C1P38E1` identical to `C1P35E1`). Deduplicating before `grouped_stratified_split` prevented those duplicate photos from leaking across `train`, `val`, and `test`.
 - **Keras 3 `RandomContrast` Default `value_range=(0, 255)` Clipping Bug**:
@@ -68,13 +68,13 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ### Built
 - **Top-Block Fine-Tuning, Logit Calibration & Grad-CAM Visual Explanations (`#17`)**:
-  - Implemented [`ml/src/healthycrop_ml/gradcam.py`](../ml/src/healthycrop_ml/gradcam.py) and [`ml/tests/test_gradcam.py`](../ml/tests/test_gradcam.py) to compute per-class `GradientTape` spatial activation heatmaps and render 3-panel explanation grids (`Original 224x224` | `Grad-CAM Activation` | `Lesion Focus Overlay`).
-  - Enhanced [`ml/src/healthycrop_ml/train.py`](../ml/src/healthycrop_ml/train.py) with low-RAM `(7, 7, 160)` spatial-feature extraction, $D_4$ dihedral augmentation, `SpatialDropout2D(0.20)`, `AdamW` with `CosineDecay`, and Menon et al. (ICLR 2021) validation-set logit bias calibration.
+  - Implemented [`ml/src/healthycroppingping_ml/gradcam.py`](../ml/src/healthycroppingping_ml/gradcam.py) and [`ml/tests/test_gradcam.py`](../ml/tests/test_gradcam.py) to compute per-class `GradientTape` spatial activation heatmaps and render 3-panel explanation grids (`Original 224x224` | `Grad-CAM Activation` | `Lesion Focus Overlay`).
+  - Enhanced [`ml/src/healthycroppingping_ml/train.py`](../ml/src/healthycroppingping_ml/train.py) with low-RAM `(7, 7, 160)` spatial-feature extraction, $D_4$ dihedral augmentation, `SpatialDropout2D(0.20)`, `AdamW` with `CosineDecay`, and Menon et al. (ICLR 2021) validation-set logit bias calibration.
   - Improved coffee test accuracy from `79.72%` to **`82.75%`** (`0.8701` mean F1 across the 4 major classes covering `89.7%` of the test set; `83.57%` validation accuracy / `0.7911` validation Macro-F1 and `0.7290`–`0.7463` 6-class test Macro-F1 after long-tail calibration), and saved [`docs/assets/confusion_matrices/coffee_finetuned.png`](assets/confusion_matrices/coffee_finetuned.png) and [`docs/assets/gradcam/coffee_gradcam.png`](assets/gradcam/coffee_gradcam.png).
 - **GitFlow Branching Structure (`develop` + `main`)**:
   - Configured `develop` as the default protected integration branch (receiving rebase-merged `--rebase` work PRs) and `main` as the protected release branch (receiving merge-commit `--merge` release PRs `chore(release): vX.Y.Z` from `develop`).
 - **Float16 TFLite Export, Confidence Threshold, Registry & Shared Fixture (`#18`)**:
-  - Implemented [`ml/src/healthycrop_ml/export_tflite.py`](../ml/src/healthycrop_ml/export_tflite.py) and [`ml/scripts/export_coffee_tflite.py`](../ml/scripts/export_coffee_tflite.py): strips training-only `aug_*` and `head_dropout` layers, exports a batch-1 SavedModel, converts it to float16 TFLite, and evaluates it with the TFLite interpreter on all `426` validation and `429` test images.
+  - Implemented [`ml/src/healthycroppingping_ml/export_tflite.py`](../ml/src/healthycroppingping_ml/export_tflite.py) and [`ml/scripts/export_coffee_tflite.py`](../ml/scripts/export_coffee_tflite.py): strips training-only `aug_*` and `head_dropout` layers, exports a batch-1 SavedModel, converts it to float16 TFLite, and evaluates it with the TFLite interpreter on all `426` validation and `429` test images.
   - Coffee model: `6,061,508` bytes, `81.12%` TFLite test accuracy vs `81.35%` Keras (`0.23 pp` drop, `99.77%` top-1 agreement).
   - Calibrated the abstention threshold on validation as the lowest top-1 probability reaching `>= 90%` accepted precision: `0.79` (`90.9%` precision at `69.5%` coverage on val; `87.7%` precision at `72.0%` coverage on test). Written to [`ml/models/coffee/registry.json`](../ml/models/coffee/registry.json) together with labels, input spec, normalization, model SHA-256, and metrics.
   - Generated [`ml/fixtures/preprocessing_fixture_224.json`](../ml/fixtures/preprocessing_fixture_224.json): seeded `224x224` RGB bytes, probe pixels, and the SHA-256 of the expected little-endian float32 tensor, verified by `ml/tests/test_preprocessing_fixture.py` (Jest side lands in Phase 4).
@@ -95,7 +95,7 @@ This log documents what was built, key architectural decisions, and technical pr
 
 ### Built
 - **Expo SDK 52 Android Development Build Setup (`#20`)**:
-  - Configured `app/app.json` for Android package `com.keylorpineda.healthycrop` with camera and storage permissions, New Architecture enabled (`newArchEnabled: true`), and file-based routing rooted at `src/app`.
+  - Configured `app/app.json` for Android package `com.keylorpineda.healthycroppingping` with camera and storage permissions, New Architecture enabled (`newArchEnabled: true`), and file-based routing rooted at `src/app`.
   - Installed and pinned Expo SDK 52 (`expo@~52.0.49`, `react@18.3.1`, `react-native@0.76.7`, `expo-router@~4.0.22`, `react-native-reanimated@~3.16.7`, `react-native-gesture-handler@~2.20.2`, `react-native-screens@~4.4.0`, `react-native-safe-area-context@4.12.0`, `expo-haptics@~14.0.1`, `expo-image@~2.0.7`, `expo-localization@~16.0.1`, `zustand@^5.0.15`, `i18next@^24.2.3`, `react-i18next@^15.7.4`).
   - Documented complete pinned toolchain and SDK matrix in `docs/ARCHITECTURE.md` §6.
   - Implemented `app/src/i18n/` with Spanish (`es`) as default market language and English (`en`) secondary, featuring symmetric key structure and mandatory agronomic non-replacement disclaimer.
