@@ -151,7 +151,7 @@ def render_class_sample_grid(
     )
     draw.text(
         (padding, 7),
-        "HealthyCrop — Preprocessed 224x224 RGB Training Samples by Class",
+        "HealthyCropping — Preprocessed 224x224 RGB Training Samples by Class",
         fill=(255, 255, 255),
     )
 

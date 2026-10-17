@@ -1,4 +1,4 @@
-"""MobileNetV3-Large transfer-learning architecture for HealthyCrop."""
+"""MobileNetV3-Large transfer-learning architecture for HealthyCropping."""
 
 from __future__ import annotations
 
@@ -57,7 +57,7 @@ def build_mobilenetv3_classifier(
     dropped = layers.Dropout(dropout_rate, name="head_dropout")(normed)
     outputs = layers.Dense(num_classes, activation="softmax", name="class_probs")(dropped)
 
-    model = keras.Model(inputs=inputs, outputs=outputs, name="healthycrop_mobilenetv3_large")
+    model = keras.Model(inputs=inputs, outputs=outputs, name="healthycropping_mobilenetv3_large")
     model.compile(
         optimizer=keras.optimizers.Adam(learning_rate=learning_rate),
         loss=keras.losses.SparseCategoricalCrossentropy(),

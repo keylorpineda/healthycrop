@@ -22,7 +22,7 @@ from typing import Any
 
 import numpy as np
 
-from healthycrop_ml.preprocess import image_to_normalized_tensor
+from healthycropping_ml.preprocess import image_to_normalized_tensor
 
 REGISTRY_SCHEMA_VERSION = 1
 MAX_TFLITE_SIZE_BYTES = 10 * 1024 * 1024
@@ -65,7 +65,7 @@ class ThresholdCalibration:
 
 
 def build_inference_model(model: Any) -> Any:
-    """Return an inference-only copy of a HealthyCrop classifier sharing its trained weights.
+    """Return an inference-only copy of a HealthyCropping classifier sharing its trained weights.
 
     Training-only augmentation layers (`aug_*`) and `head_dropout` are removed so the
     exported graph is `input -> MobileNetV3-Large backbone -> head_norm -> class_probs`.
@@ -78,7 +78,7 @@ def build_inference_model(model: Any) -> Any:
     features = backbone(inputs, training=False)
     normed = model.get_layer("head_norm")(features)
     outputs = model.get_layer("class_probs")(normed)
-    return keras.Model(inputs=inputs, outputs=outputs, name="healthycrop_inference")
+    return keras.Model(inputs=inputs, outputs=outputs, name="healthycropping_inference")
 
 
 def convert_to_float16_tflite(model: Any) -> bytes:
@@ -319,7 +319,7 @@ def build_preprocessing_fixture(
     return {
         "schema_version": FIXTURE_SCHEMA_VERSION,
         "description": (
-            "Shared HealthyCrop preprocessing fixture: normalized = (rgb - mean) / std, "
+            "Shared HealthyCropping preprocessing fixture: normalized = (rgb - mean) / std, "
             "float32, NHWC without batch axis, RGB channel order."
         ),
         "width": image_size,
@@ -366,8 +366,8 @@ def run_export_pipeline(
     """Export a crop checkpoint to float16 TFLite, verify parity, calibrate, and write registry."""
     import keras
 
-    from healthycrop_ml.config import load_crop_config
-    from healthycrop_ml.train import load_split_arrays
+    from healthycropping_ml.config import load_crop_config
+    from healthycropping_ml.train import load_split_arrays
 
     cfg = load_crop_config(config_path)
     manifest_csv = processed_dir / "manifest.csv"
