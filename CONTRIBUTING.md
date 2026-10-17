@@ -1,6 +1,6 @@
-# Contributing to HealthyCrop
+# Contributing to HealthyCropping
 
-Thank you for your interest in contributing to **HealthyCrop**. This document outlines our development setup, conventions, quality checks, and pull request workflow.
+Thank you for your interest in contributing to **HealthyCropping**. This document outlines our development setup, conventions, quality checks, and pull request workflow.
 
 ## Language Policy
 
@@ -76,10 +76,10 @@ All checks must pass locally before pushing. Fix root causes; never disable lint
 
 - **App (`app/`)**:
   ```bash
-  pnpm --filter @healthycrop/app lint
-  pnpm --filter @healthycrop/app format:check
-  pnpm --filter @healthycrop/app typecheck
-  pnpm --filter @healthycrop/app test
+  pnpm --filter @healthycropping/app lint
+  pnpm --filter @healthycropping/app format:check
+  pnpm --filter @healthycropping/app typecheck
+  pnpm --filter @healthycropping/app test
   ```
 
 - **API (`api/`)**:
