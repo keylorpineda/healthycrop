@@ -131,7 +131,7 @@ wheels = [
 ]
 
 [[package]]
-name = "healthycrop-api"
+name = "healthycropping-api"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
