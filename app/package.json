@@ -1,8 +1,8 @@
 {
-  "name": "@healthycrop/app",
+  "name": "@healthycropping/app",
   "version": "0.2.0",
   "private": true,
-  "description": "HealthyCrop offline-first Android app (com.keylorpineda.healthycrop).",
+  "description": "HealthyCropping offline-first Android app (com.keylorpineda.healthycropping).",
   "author": "Keylor Pineda <keylorpineda729@gmail.com> (https://github.com/keylorpineda)",
   "main": "expo-router/entry",
   "scripts": {
