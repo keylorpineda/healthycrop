@@ -10,7 +10,7 @@ from typing import Any
 import numpy as np
 from PIL import Image, ImageDraw
 
-from healthycrop_ml.preprocess import image_to_normalized_tensor
+from healthycropping_ml.preprocess import image_to_normalized_tensor
 
 
 def _find_backbone_and_last_spatial_layer(model: Any) -> tuple[Any, str, list[Any]]:
@@ -163,7 +163,7 @@ def render_crop_gradcam_grid(
     draw.rectangle([(0, 0), (width, header_height)], fill=(27, 67, 50))
     draw.text(
         (12, 11),
-        "HealthyCrop — Grad-CAM Visual Explanations per Class (Held-Out Test Split)",
+        "HealthyCropping — Grad-CAM Visual Explanations per Class (Held-Out Test Split)",
         fill=(255, 255, 255),
     )
 

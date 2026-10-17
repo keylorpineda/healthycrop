@@ -13,16 +13,16 @@ from typing import Any
 import numpy as np
 from PIL import Image
 
-from healthycrop_ml.config import CropConfig, load_crop_config
-from healthycrop_ml.evaluate import (
+from healthycropping_ml.config import CropConfig, load_crop_config
+from healthycropping_ml.evaluate import (
     EvaluationMetrics,
     compute_balanced_class_weights,
     evaluate_predictions,
     render_confusion_matrix_png,
 )
-from healthycrop_ml.gradcam import render_crop_gradcam_grid
-from healthycrop_ml.model import build_mobilenetv3_classifier, configure_backbone_trainability
-from healthycrop_ml.preprocess import image_to_normalized_tensor
+from healthycropping_ml.gradcam import render_crop_gradcam_grid
+from healthycropping_ml.model import build_mobilenetv3_classifier, configure_backbone_trainability
+from healthycropping_ml.preprocess import image_to_normalized_tensor
 
 
 @dataclass(frozen=True)
@@ -496,7 +496,7 @@ def run_training_pipeline(
         render_confusion_matrix_png(
             confusion=test_metrics.confusion_matrix,
             classes=cfg.classes,
-            title=f"HealthyCrop — {cfg.crop.title()} Test Confusion Matrix ({run_id})",
+            title=f"HealthyCropping — {cfg.crop.title()} Test Confusion Matrix ({run_id})",
             output_png=confusion_png_out,
         )
         print(f"[{run_id}] Saved confusion matrix PNG to {confusion_png_out}", flush=True)
