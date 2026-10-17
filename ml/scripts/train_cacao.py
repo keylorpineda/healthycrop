@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from healthycrop_ml.train import main
+from healthycropping_ml.train import main
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 

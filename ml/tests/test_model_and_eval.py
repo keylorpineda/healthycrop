@@ -7,12 +7,12 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from healthycrop_ml.evaluate import (
+from healthycropping_ml.evaluate import (
     compute_balanced_class_weights,
     evaluate_predictions,
     render_confusion_matrix_png,
 )
-from healthycrop_ml.model import build_mobilenetv3_classifier
+from healthycropping_ml.model import build_mobilenetv3_classifier
 
 
 def test_compute_balanced_class_weights() -> None:

@@ -15,7 +15,7 @@ from typing import Any
 
 import httpx
 
-from healthycrop_ml.download import (
+from healthycropping_ml.download import (
     DEFAULT_TIMEOUT,
     USER_AGENT,
     extract_archive_safe,

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from healthycrop_ml.export_tflite import main
+from healthycropping_ml.export_tflite import main
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 

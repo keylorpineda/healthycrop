@@ -7,16 +7,16 @@ from pathlib import Path
 import pytest
 from PIL import Image
 
-from healthycrop_ml.config import load_crop_config
-from healthycrop_ml.preprocess import (
+from healthycropping_ml.config import load_crop_config
+from healthycropping_ml.preprocess import (
     CandidateSample,
     YoloBBox,
     crop_yolo_box,
     load_clean_sample_image,
     parse_yolo_line,
 )
-from healthycrop_ml.report import compute_manifest_summary, format_cacao_report_markdown
-from healthycrop_ml.split import assign_grouped_stratified_splits, verify_no_group_leakage
+from healthycropping_ml.report import compute_manifest_summary, format_cacao_report_markdown
+from healthycropping_ml.split import assign_grouped_stratified_splits, verify_no_group_leakage
 
 
 def _make_sample_image(
