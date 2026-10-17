@@ -1,6 +1,6 @@
-# HealthyCrop — Model Cards
+# HealthyCropping — Model Cards
 
-This document provides the Model Cards (following Mitchell et al., 2019) for the three on-device TensorFlow Lite crop disease classification models shipped with **HealthyCrop**.
+This document provides the Model Cards (following Mitchell et al., 2019) for the three on-device TensorFlow Lite crop disease classification models shipped with **HealthyCropping**.
 
 > [!WARNING]
 > **Agronomic Decision-Support Disclaimer**: These models are intended solely for preliminary field decision support in Costa Rica and comparable tropical agroecosystems. They **do not replace a certified agronomist** or laboratory phytosanitary diagnosis. Visual symptoms of fungal, bacterial, viral, pest, and nutritional disorders can overlap. Never apply restricted agrochemicals or eradicate trees based solely on an automated prediction.
