@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Float16 TFLite cacao model export (`ml/scripts/export_cacao_tflite.py`, `ml/models/cacao/cacao_v0.1.0_fp16.tflite`, `6.06 MB`, `91.73%` test accuracy with `0.00 pp` drop vs Keras and `100.0%` top-1 agreement), validation-calibrated confidence threshold `0.51` (`90.15%` val precision), `ml/models/cacao/registry.json`, and Cacao Model Card (`docs/MODEL_CARD.md` §3) (`#70`).
 - Cacao `MobileNetV3-Large` frozen baseline (`87.47%` test accuracy, `0.7946` Macro-F1) and top-30 fine-tuned model (`91.73%` test accuracy, `0.8502` Macro-F1, `0.9532` `healthy` F1, `0.8553` `monilia` F1, `0.7419` `black_pod` F1), CLI script (`ml/scripts/train_cacao.py`), confusion matrices (`docs/assets/confusion_matrices/cacao_*.png`), and Grad-CAM visual explanations (`docs/assets/gradcam/cacao_gradcam.png`) in `docs/EXPERIMENTS.md` (`#28`).
 - Cacao pod dataset downloaders (`ml/scripts/download_cocoamonilia.py`, `ml/scripts/download_unab_cacao.py`), configuration (`ml/configs/cacao.yaml`), YOLO bounding-box pod cropper and preparation pipeline (`ml/scripts/prepare_cacao.py`), dataset report (`docs/data_reports/cacao.md`), and `224x224` sample grid (`docs/assets/data_reports/cacao_grid.png`) combining CocoaMoniliaDataSet (CC BY 4.0) and UNAB Cocoa Diseases (ODbL v1.0) into `2,646` deduplicated samples across `1,367` grouped tree/photo IDs (`#27`).
 
