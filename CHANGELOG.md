@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Cacao pod dataset downloaders (`ml/scripts/download_cocoamonilia.py`, `ml/scripts/download_unab_cacao.py`), configuration (`ml/configs/cacao.yaml`), YOLO bounding-box pod cropper and preparation pipeline (`ml/scripts/prepare_cacao.py`), dataset report (`docs/data_reports/cacao.md`), and `224x224` sample grid (`docs/assets/data_reports/cacao_grid.png`) combining CocoaMoniliaDataSet (CC BY 4.0) and UNAB Cocoa Diseases (ODbL v1.0) into `2,646` deduplicated samples across `1,367` grouped tree/photo IDs (`#27`).
+
+### Fixed
+
+- Replaced `android-actions/setup-android@v3` in `.github/workflows/release.yml` with preinstalled `$ANDROID_HOME` license acceptance (avoiding removed `sdkmanager tools` failure on Command-Line Tools 16.0), added `scripts/` to `ml` Mypy CI check, and pointed `.github/dependabot.yml` at `develop` and root `pnpm` workspace.
+
 ## [0.2.0] - 2026-10-16
 
 ### Added
